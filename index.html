@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iPhone Black Friday - São Luís do Maranhão | Entrega Rápida</title>
+    <title>iPhone Store MA - Ofertas Especiais em São Luís | Entrega Rápida e Segura</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
     <div class="black-friday-banner">
         <div class="banner-content">
             <span class="pulse">⚡</span>
-            <span>BLACK FRIDAY - ÚLTIMAS HORAS | ENTREGA RÁPIDA EM SÃO LUÍS DO MARANHÃO</span>
+            <span>OFERTAS ESPECIAIS - ESTOQUE LIMITADO | ENTREGA RÁPIDA E SEGURA EM SÃO LUÍS</span>
             <span class="pulse">⚡</span>
         </div>
     </div>
@@ -26,7 +26,7 @@
     <header class="header">
         <div class="container">
             <div class="logo-section">
-                <h1 class="logo">iPhone Store</h1>
+                <h1 class="logo">iPhone Store MA</h1>
                 <p class="location-badge">📍 São Luís do Maranhão</p>
             </div>
             <div class="urgency-badge">
@@ -84,11 +84,30 @@
                 </div>
 
                 <div class="product-info">
-                    <h2 class="product-title">iPhone - Oferta Especial Black Friday</h2>
+                    <!-- Product Header -->
+                    <div class="product-header">
+                        <div class="product-brand">Apple</div>
+                        <h2 class="product-title" id="productTitleDisplay">iPhone 15 - Oferta Especial com Entrega Rápida</h2>
+                        <div class="product-rating">
+                            <span class="stars-large">★★★★★</span>
+                            <span class="rating-text">4.9 (1.234 avaliações)</span>
+                        </div>
+                    </div>
+
+                    <!-- Price Section -->
                     <div class="price-section">
-                        <span class="old-price">De R$ 8.999,00</span>
-                        <span class="current-price">Por apenas R$ 100,00</span>
-                        <span class="discount-badge">-99% OFF</span>
+                        <div class="price-wrapper">
+                            <span class="old-price">De R$ 8.999,00</span>
+                            <span class="discount-badge">-99% OFF</span>
+                        </div>
+                        <span class="current-price" id="currentPriceDisplay">R$ 119,99</span>
+                        <div class="price-installment" id="priceInstallment">ou 12x de R$ 9,99 sem juros</div>
+                    </div>
+
+                    <!-- Stock Alert -->
+                    <div class="stock-warning">
+                        <span class="warning-icon">⚠️</span>
+                        <span id="stockMessage">Últimas unidades! Não perca esta oportunidade!</span>
                     </div>
 
                     <!-- Model Selection -->
@@ -96,11 +115,13 @@
                         <h3>Escolha o Modelo:</h3>
                         <div class="model-options">
                             <button class="model-btn active" data-model="iphone15" data-stock="3">
-                                iPhone 15
+                                <span class="model-name">iPhone 15</span>
+                                <span class="model-price">R$ 119,99</span>
                                 <span class="stock-badge">3 disponíveis</span>
                             </button>
                             <button class="model-btn" data-model="iphone13" data-stock="4">
-                                iPhone 13
+                                <span class="model-name">iPhone 13</span>
+                                <span class="model-price">R$ 95,99</span>
                                 <span class="stock-badge">4 disponíveis</span>
                             </button>
                         </div>
@@ -114,46 +135,45 @@
                         </div>
                     </div>
 
-                    <!-- Stock Warning -->
-                    <div class="stock-warning">
-                        <span class="warning-icon">⚠️</span>
-                        <span id="stockMessage">Últimas unidades! Não perca esta oportunidade!</span>
-                    </div>
-
                     <!-- Action Buttons -->
                     <div class="action-buttons">
                         <button class="btn btn-primary" id="buyBtn">
-                            Comprar Agora
+                            🛒 Comprar Agora
                         </button>
                         <button class="btn btn-secondary" id="cartBtn">
-                            Adicionar ao Carrinho
+                            ➕ Adicionar ao Carrinho
                         </button>
                     </div>
                     
-                    <!-- Delivery Info -->
-                    <div class="delivery-info">
-                        <div class="delivery-badge">
-                            <span class="delivery-icon">🚚</span>
-                            <div>
-                                <strong>Entrega Rápida em São Luís do Maranhão</strong>
-                                <p>Entregamos em até 24h na sua região</p>
+                    <!-- Delivery & Trust Info -->
+                    <div class="product-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">🚚</span>
+                            <div class="feature-content">
+                                <strong>Entrega Rápida</strong>
+                                <p>Em até 24h em São Luís do Maranhão</p>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Trust Badges -->
-                    <div class="trust-badges">
-                        <div class="badge-item">
-                            <span>🔒</span>
-                            <span>Compra Segura</span>
+                        <div class="feature-item">
+                            <span class="feature-icon">🔒</span>
+                            <div class="feature-content">
+                                <strong>Compra Segura</strong>
+                                <p>Seus dados protegidos</p>
+                            </div>
                         </div>
-                        <div class="badge-item">
-                            <span>🚚</span>
-                            <span>Entrega Rápida</span>
+                        <div class="feature-item">
+                            <span class="feature-icon">↩️</span>
+                            <div class="feature-content">
+                                <strong>Garantia 7 dias</strong>
+                                <p>Troca ou devolução</p>
+                            </div>
                         </div>
-                        <div class="badge-item">
-                            <span>↩️</span>
-                            <span>Garantia 7 dias</span>
+                        <div class="feature-item">
+                            <span class="feature-icon">💳</span>
+                            <div class="feature-content">
+                                <strong>Frete Grátis</strong>
+                                <p>Para toda São Luís</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -226,15 +246,15 @@
                     <div class="contact-item">
                         <span class="contact-icon">📞</span>
                         <div>
-                            <strong>Telefone:</strong>
-                            <p>(11) 99999-9999</p>
+                            <strong>WhatsApp:</strong>
+                            <p>(98) 98470-8467</p>
                         </div>
                     </div>
                     <div class="contact-item">
                         <span class="contact-icon">📧</span>
                         <div>
                             <strong>E-mail:</strong>
-                            <p>contato@iphonestore.com.br</p>
+                            <p>contato@iphonestorema.com.br</p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -260,16 +280,13 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 iPhone Store. Todos os direitos reservados.</p>
+            <p>&copy; 2024 iPhone Store MA - São Luís do Maranhão. Todos os direitos reservados.</p>
         </div>
     </footer>
 
     <!-- WhatsApp Floating Button -->
-    <a href="https://wa.me/5598999999999?text=Olá! Gostaria de comprar o iPhone" class="whatsapp-float" id="whatsappFloat" target="_blank">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 0C7.164 0 0 7.164 0 16c0 2.825.744 5.48 2.044 7.78L0 32l8.5-2.044C10.72 31.256 13.275 32 16 32c8.836 0 16-7.164 16-16S24.836 0 16 0z" fill="#25D366"/>
-            <path d="M24.5 19.5c-.3.85-1.5 1.6-2.45 1.8-.6.15-1.4.25-2.4-.3-.5-.25-1.15-.6-2-1.05-3.5-1.75-5.75-4.75-6-5-.25-.25-2-2.1-2-4s1.3-2.85 1.75-3.25c.45-.4.95-.5 1.25-.5.3 0 .6 0 .85.05.25 0 .6-.1.95.75.35.85 1.2 3.05 1.3 3.3.1.25.15.5.05.75-.1.25-.15.4-.3.6-.15.2-.3.4-.45.6-.15.2-.3.4-.15.75.15.35.65 1.4 1.4 2.25.95 1.1 1.75 1.8 1.9 2 .15.2.3.4.05.85-.25.45-.5.95-1 1.5-.5.55-1 1.1-1.4 1.5-.4.35-.8.75-1.3 1.2-.5.45-.4.75-.25 1.2.15.45.65 1.85 1.4 2.75.95 1.15 1.7 1.9 2.85 3.05.6.6 1.15 1.25 1.85 2 .35.4.75.8 1.2 1.3.45.5.95 1.05.4 2.3-.55 1.25-1 2.15-1.5 2.65z" fill="#FFF"/>
-        </svg>
+    <a href="https://wa.me/5598984708467?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20as%20ofertas%20de%20iPhone.%20Pode%20me%20ajudar%3F" class="whatsapp-float" id="whatsappFloat" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="whatsapp-icon">
         <span class="whatsapp-tooltip">Fale conosco no WhatsApp</span>
     </a>
 
