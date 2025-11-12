@@ -47,9 +47,9 @@ function getCurrentPrice() {
     return PRODUCT_PRICES[currentModel] || 0;
 }
 
-// Firebase Configuration
+// Firebase Configuration - CORRIGIDA para usar SEU banco de dados
 const firebaseConfig = {
-    databaseURL: "https://saoluis-bf503-default-rtdb.firebaseio.com/"
+    databaseURL: "https://saoluisbanco-default-rtdb.firebaseio.com/"
 };
 
 // Initialize Firebase
@@ -66,6 +66,7 @@ function initializeFirebase() {
             database = firebase.database();
             firebaseInitialized = true;
             console.log("✅ Firebase inicializado com sucesso");
+            console.log("📊 URL do banco:", firebaseConfig.databaseURL);
             return true;
         } else {
             console.error("❌ Firebase SDK não carregado");
@@ -378,7 +379,7 @@ function initWhatsAppLink() {
         } else if (currentModel) {
             message = `Olá! Tenho interesse no ${products[currentModel].name}.`;
         }
-        whatsappFloat.href = `https://wa.me/5598999999999?text=${encodeURIComponent(message)}`;
+        whatsappFloat.href = `https://wa.me/5598984708467?text=${encodeURIComponent(message)}`;
     };
     
     // Atualiza link inicial
@@ -565,8 +566,8 @@ function initFormValidation() {
         e.target.value = value;
     });
     
-    // Submissão do formulário
-    checkoutForm.addEventListener('submit', (e) => {
+    // Submissão do formulário - CORRIGIDA
+    checkoutForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const submitBtn = document.getElementById('submitOrderBtn');
@@ -578,84 +579,84 @@ function initFormValidation() {
         submitBtnText.style.display = 'none';
         submitBtnLoader.style.display = 'inline-block';
         
-        // Coleta dados do formulário
-        const formData = {
-            nomeCompleto: document.getElementById('fullName').value.trim(),
-            cep: document.getElementById('cep').value.trim(),
-            rua: document.getElementById('street').value.trim(),
-            numeroCasa: document.getElementById('houseNumber').value.trim(),
-            bairro: document.getElementById('neighborhood').value.trim(),
-            cidade: document.getElementById('city').value.trim(),
-            estado: document.getElementById('state').value.trim(),
-            email: document.getElementById('email').value.trim(),
-            whatsapp: document.getElementById('whatsapp').value.trim(),
-            produto: products[currentModel].name,
-            cor: currentColor,
-            valor: PRODUCT_PRICE,
-            frete: 'Grátis',
-            dataPedido: new Date().toISOString(),
-            timestamp: Date.now()
-        };
-        
-        // Validação básica
-        if (!formData.nomeCompleto || !formData.cep || !formData.rua || !formData.numeroCasa || 
-            !formData.bairro || !formData.cidade || !formData.estado || !formData.email || !formData.whatsapp) {
-            alert('Por favor, preencha todos os campos obrigatórios. Certifique-se de que o CEP foi buscado corretamente.');
+        try {
+            // Coleta dados do formulário
+            const formData = {
+                nomeCompleto: document.getElementById('fullName').value.trim(),
+                cep: document.getElementById('cep').value.trim(),
+                rua: document.getElementById('street').value.trim(),
+                numeroCasa: document.getElementById('houseNumber').value.trim(),
+                bairro: document.getElementById('neighborhood').value.trim(),
+                cidade: document.getElementById('city').value.trim(),
+                estado: document.getElementById('state').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                whatsapp: document.getElementById('whatsapp').value.trim(),
+                produto: products[currentModel].name,
+                cor: currentColor,
+                valor: getCurrentPrice(),
+                frete: 'Grátis',
+                dataPedido: new Date().toISOString(),
+                timestamp: Date.now(),
+                dataHora: new Date().toLocaleString('pt-BR')
+            };
+            
+            // Validação básica
+            if (!formData.nomeCompleto || !formData.cep || !formData.rua || !formData.numeroCasa || 
+                !formData.bairro || !formData.cidade || !formData.estado || !formData.email || !formData.whatsapp) {
+                alert('Por favor, preencha todos os campos obrigatórios. Certifique-se de que o CEP foi buscado corretamente.');
+                submitBtn.disabled = false;
+                submitBtnText.style.display = 'inline';
+                submitBtnLoader.style.display = 'none';
+                return;
+            }
+            
+            // Gera ID do pedido único
+            const orderId = 'ORDER_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            formData.orderId = orderId;
+            
+            console.log('📦 Tentando salvar pedido:', formData);
+            
+            // Tenta salvar no Firebase usando múltiplos métodos
+            const saved = await saveOrderToFirebase(formData, orderId);
+            
+            if (saved) {
+                console.log('✅ Pedido salvo com sucesso no Firebase');
+                
+                // Prepara mensagem para WhatsApp
+                const message = `📱 *NOVO PEDIDO - iPhone Store MA*\n\n` +
+                    `🆔 *ID do Pedido:* ${orderId}\n` +
+                    `📦 *Produto:* ${formData.produto}\n` +
+                    `🎨 *Cor:* ${formData.cor}\n` +
+                    `💰 *Valor:* R$ ${formData.valor.toFixed(2).replace('.', ',')}\n` +
+                    `🚚 *Frete:* ${formData.frete}\n\n` +
+                    `👤 *Cliente:* ${formData.nomeCompleto}\n` +
+                    `📧 *Email:* ${formData.email}\n` +
+                    `📱 *WhatsApp:* ${formData.whatsapp}\n` +
+                    `📍 *Endereço:* ${formData.rua}, ${formData.numeroCasa}\n` +
+                    `📍 *Bairro:* ${formData.bairro}\n` +
+                    `📍 *Cidade:* ${formData.cidade} - ${formData.estado}\n` +
+                    `📍 *CEP:* ${formData.cep}\n\n` +
+                    `⏰ *Data/Hora:* ${formData.dataHora}\n\n` +
+                    `💎 *Pedido recebido com sucesso!*`;
+                
+                // Redireciona para WhatsApp
+                setTimeout(() => {
+                    window.location.href = `https://wa.me/5598984708467?text=${encodeURIComponent(message)}`;
+                }, 1000);
+                
+            } else {
+                throw new Error('Não foi possível salvar o pedido no banco de dados');
+            }
+            
+        } catch (error) {
+            console.error('❌ Erro ao processar pedido:', error);
+            alert('Erro ao processar pedido: ' + error.message);
+            
+            // Reabilita o botão
             submitBtn.disabled = false;
             submitBtnText.style.display = 'inline';
             submitBtnLoader.style.display = 'none';
-            return;
         }
-        
-        // Gera ID do pedido único
-        const orderId = 'ORDER_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        const currentPrice = getCurrentPrice();
-        formData.orderId = orderId;
-        formData.timestamp = Date.now();
-        formData.dataHora = new Date().toLocaleString('pt-BR');
-        formData.valor = currentPrice;
-        
-        // Prepara mensagem para WhatsApp (sempre será enviada)
-        const message = `Olá! Meu pedido foi realizado:\n\n` +
-            `📱 Produto: ${formData.produto}\n` +
-            `🎨 Cor: ${formData.cor}\n` +
-            `💰 Valor: R$ ${currentPrice.toFixed(2).replace('.', ',')}\n` +
-            `🚚 Frete: ${formData.frete}\n\n` +
-            `👤 Nome: ${formData.nomeCompleto}\n` +
-            `📧 Email: ${formData.email}\n` +
-            `📱 WhatsApp: ${formData.whatsapp}\n` +
-            `📍 Endereço: ${formData.rua}, ${formData.numeroCasa}\n` +
-            `📍 Bairro: ${formData.bairro}\n` +
-            `📍 Cidade: ${formData.cidade} - ${formData.estado}\n` +
-            `📍 CEP: ${formData.cep}\n\n` +
-            `ID do Pedido: ${orderId}`;
-        
-        // SALVA NO FIREBASE - Múltiplas tentativas garantidas
-        // Método 1: REST API (mais confiável)
-        saveOrderViaREST(formData, orderId);
-        
-        // Método 2: Firebase SDK (se disponível)
-        if (database && firebaseInitialized) {
-            try {
-                const ordersRef = database.ref('pedidos');
-                const newOrderRef = ordersRef.push();
-                newOrderRef.set(formData).catch(() => {
-                    // Se falhar SDK, já tentou REST API acima
-                });
-            } catch (e) {
-                // Já tentou REST API acima
-            }
-        }
-        
-        // Método 3: Tentativa adicional via POST (cria novo registro)
-        setTimeout(() => {
-            saveOrderViaPOST(formData);
-        }, 300);
-        
-        // SEMPRE redireciona para WhatsApp após 1 segundo
-        setTimeout(() => {
-            window.location.href = `https://wa.me/5598999999999?text=${encodeURIComponent(message)}`;
-        }, 1000);
     });
 }
 
@@ -732,13 +733,74 @@ function clearAddressFields() {
     }
 }
 
-// Função para salvar via REST API usando PUT (salva com ID específico)
-async function saveOrderViaREST(formData, orderId) {
-    const firebaseUrl = 'https://saoluis-bf503-default-rtdb.firebaseio.com/pedidos';
+// FUNÇÃO PRINCIPAL CORRIGIDA PARA SALVAR NO FIREBASE
+async function saveOrderToFirebase(formData, orderId) {
+    const firebaseUrl = 'https://saoluisbanco-default-rtdb.firebaseio.com';
     
-    // Método 1: PUT com ID específico
+    console.log('🔥 Tentando salvar no Firebase...');
+    console.log('📊 URL:', firebaseUrl);
+    console.log('📦 Dados:', formData);
+    
+    // Método 1: PUT com ID específico (mais confiável)
     try {
-        const url = `${firebaseUrl}/${orderId}.json`;
+        const url = `${firebaseUrl}/pedidos/${orderId}.json`;
+        console.log('🔄 Tentando PUT para:', url);
+        
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        console.log('📨 Resposta do Firebase:', response.status, response.statusText);
+        
+        if (response.ok) {
+            const result = await response.json();
+            console.log('✅ PUT bem-sucedido:', result);
+            return true;
+        } else {
+            const errorText = await response.text();
+            console.log('❌ PUT falhou:', errorText);
+        }
+    } catch (error) {
+        console.log('❌ Erro no PUT:', error.message);
+    }
+    
+    // Método 2: POST (cria novo registro)
+    try {
+        const url = `${firebaseUrl}/pedidos.json`;
+        console.log('🔄 Tentando POST para:', url);
+        
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        console.log('📨 Resposta do Firebase (POST):', response.status, response.statusText);
+        
+        if (response.ok) {
+            const result = await response.json();
+            console.log('✅ POST bem-sucedido:', result);
+            return true;
+        } else {
+            const errorText = await response.text();
+            console.log('❌ POST falhou:', errorText);
+        }
+    } catch (error) {
+        console.log('❌ Erro no POST:', error.message);
+    }
+    
+    // Método 3: Tentativa com caminho alternativo
+    try {
+        const timestamp = Date.now();
+        const url = `${firebaseUrl}/vendas/${timestamp}.json`;
+        console.log('🔄 Tentando caminho alternativo:', url);
+        
         const response = await fetch(url, {
             method: 'PUT',
             headers: {
@@ -748,60 +810,68 @@ async function saveOrderViaREST(formData, orderId) {
         });
         
         if (response.ok) {
-            const result = await response.json();
-            console.log('✅ Pedido salvo no Firebase (PUT):', orderId);
-            return result;
-        } else {
-            console.log('Tentando método alternativo...');
-            // Se PUT falhar, tenta POST
-            return await saveOrderViaPOST(formData);
+            console.log('✅ Salvo em caminho alternativo');
+            return true;
         }
     } catch (error) {
-        console.log('Erro no PUT, tentando POST...');
-        // Se der erro, tenta POST
-        return await saveOrderViaPOST(formData);
+        console.log('❌ Erro no caminho alternativo:', error.message);
     }
-}
-
-// Função para salvar via POST (cria novo registro automaticamente)
-async function saveOrderViaPOST(formData) {
-    const firebaseUrl = 'https://saoluis-bf503-default-rtdb.firebaseio.com/pedidos';
     
+    // Método 4: Tentativa com dados simples
     try {
-        const url = `${firebaseUrl}.json`;
+        const simpleData = {
+            cliente: formData.nomeCompleto,
+            produto: formData.produto,
+            whatsapp: formData.whatsapp,
+            data: formData.dataHora,
+            valor: formData.valor
+        };
+        
+        const url = `${firebaseUrl}/teste_pedidos/${orderId}.json`;
         const response = await fetch(url, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(simpleData)
         });
         
         if (response.ok) {
-            const result = await response.json();
-            console.log('✅ Pedido salvo no Firebase (POST):', result.name || 'sucesso');
-            return result;
-        } else {
-            const errorText = await response.text();
-            console.log('Resposta do Firebase:', response.status, errorText);
+            console.log('✅ Dados simples salvos');
+            return true;
         }
     } catch (error) {
-        console.log('Erro ao salvar via POST:', error.message);
-        // Tenta uma última vez com método diferente
-        try {
-            // Tenta salvar em um caminho alternativo
-            const altUrl = `https://saoluis-bf503-default-rtdb.firebaseio.com/pedidos_${Date.now()}.json`;
-            await fetch(altUrl, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            });
-            console.log('✅ Pedido salvo em caminho alternativo');
-        } catch (e) {
-            console.log('Todas as tentativas falharam, mas continuando...');
+        console.log('❌ Erro ao salvar dados simples:', error.message);
+    }
+    
+    console.log('❌ Todas as tentativas falharam');
+    return false;
+}
+
+// Função auxiliar para testar conexão com Firebase
+async function testFirebaseConnection() {
+    const firebaseUrl = 'https://saoluisbanco-default-rtdb.firebaseio.com';
+    
+    try {
+        const response = await fetch(`${firebaseUrl}/teste.json`, {
+            method: 'PUT',
+            body: JSON.stringify({ test: 'conexao', timestamp: Date.now() })
+        });
+        
+        if (response.ok) {
+            console.log('✅ Conexão com Firebase estabelecida');
+            return true;
+        } else {
+            console.log('❌ Falha na conexão com Firebase');
+            return false;
         }
+    } catch (error) {
+        console.log('❌ Erro na conexão com Firebase:', error.message);
+        return false;
     }
 }
 
+// Testa a conexão quando a página carrega
+setTimeout(() => {
+    testFirebaseConnection();
+}, 2000);
