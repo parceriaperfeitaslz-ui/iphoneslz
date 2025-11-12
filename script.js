@@ -30,8 +30,22 @@ const products = {
 let currentModel = 'iphone15';
 let currentColor = null;
 
-// Preço do produto
-const PRODUCT_PRICE = 100.00;
+// Preços dos produtos
+const PRODUCT_PRICES = {
+    iphone15: 119.99,
+    iphone13: 95.99
+};
+
+// Carrinho de compras (máximo 1 de cada modelo)
+const cart = {
+    iphone15: null,
+    iphone13: null
+};
+
+// Função para obter preço do modelo atual
+function getCurrentPrice() {
+    return PRODUCT_PRICES[currentModel] || 0;
+}
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -99,7 +113,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initButtons();
     initModals();
     initFormValidation();
+    initWhatsAppLink();
     updateStockDisplay();
+    updatePriceDisplay();
+    updateProductTitle();
 });
 
 // Carrossel de imagens
@@ -162,7 +179,38 @@ function initModelSelection() {
             // Atualiza cores disponíveis
             updateColorOptions();
             updateStockDisplay();
+            updatePriceDisplay();
+            updateProductTitle();
         });
+    });
+}
+
+// Atualiza título do produto
+function updateProductTitle() {
+    const titleElement = document.getElementById('productTitleDisplay');
+    if (titleElement) {
+        titleElement.textContent = `${products[currentModel].name} - Oferta Especial Black Friday`;
+    }
+}
+
+// Atualiza exibição do preço
+function updatePriceDisplay() {
+    const price = getCurrentPrice();
+    const priceDisplay = document.getElementById('currentPriceDisplay');
+    const installmentDisplay = document.getElementById('priceInstallment');
+    const priceElements = document.querySelectorAll('#modalProductPrice, #summaryTotal');
+    
+    if (priceDisplay) {
+        priceDisplay.textContent = `R$ ${price.toFixed(2).replace('.', ',')}`;
+    }
+    
+    if (installmentDisplay) {
+        const installmentValue = (price / 12).toFixed(2).replace('.', ',');
+        installmentDisplay.textContent = `ou 12x de R$ ${installmentValue} sem juros`;
+    }
+    
+    priceElements.forEach(element => {
+        element.textContent = `R$ ${price.toFixed(2).replace('.', ',')}`;
     });
 }
 
@@ -258,10 +306,27 @@ function initButtons() {
             return;
         }
         
-        // Simula adicionar ao carrinho
+        // Verifica se já tem 1 deste modelo no carrinho
+        if (cart[currentModel]) {
+            alert(`Você já adicionou 1 ${products[currentModel].name} ao carrinho. Máximo de 1 unidade por modelo.`);
+            return;
+        }
+        
+        // Adiciona ao carrinho
+        cart[currentModel] = {
+            model: currentModel,
+            name: products[currentModel].name,
+            color: currentColor,
+            price: getCurrentPrice()
+        };
+        
+        // Feedback visual
         cartBtn.textContent = '✓ Adicionado!';
-        cartBtn.style.background = '#4CAF50';
+        cartBtn.style.background = '#10b981';
         cartBtn.disabled = true;
+        
+        // Atualiza badge do carrinho se existir
+        updateCartBadge();
         
         setTimeout(() => {
             cartBtn.textContent = 'Adicionar ao Carrinho';
@@ -270,7 +335,42 @@ function initButtons() {
         }, 2000);
     });
     
-    // Atualiza link do WhatsApp flutuante quando modelo/cor mudam
+    // Atualiza botão do carrinho quando modelo/cor mudam
+    function updateCartButton() {
+        if (cart[currentModel]) {
+            cartBtn.textContent = '✓ Já no Carrinho';
+            cartBtn.style.background = '#10b981';
+            cartBtn.disabled = true;
+        } else {
+            cartBtn.textContent = 'Adicionar ao Carrinho';
+            cartBtn.style.background = '';
+            cartBtn.disabled = false;
+        }
+    }
+    
+    // Observa mudanças no modelo
+    document.querySelectorAll('.model-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            setTimeout(updateCartButton, 100);
+        });
+    });
+    
+    // Atualiza inicialmente
+    updateCartButton();
+}
+
+// Atualiza badge do carrinho
+function updateCartBadge() {
+    const cartCount = Object.keys(cart).filter(key => cart[key] !== null).length;
+    // Você pode adicionar um badge visual aqui se quiser
+    console.log(`Carrinho: ${cartCount} item(s)`);
+}
+
+// Atualiza link do WhatsApp flutuante
+function initWhatsAppLink() {
+    const whatsappFloat = document.getElementById('whatsappFloat');
+    if (!whatsappFloat) return;
+    
     const updateWhatsAppLink = () => {
         let message = 'Olá! Tenho interesse no iPhone.';
         if (currentModel && currentColor) {
@@ -333,10 +433,11 @@ function openProductModal() {
     const productName = document.getElementById('modalProductName');
     const productColor = document.getElementById('modalProductColor');
     const productPrice = document.getElementById('modalProductPrice');
+    const price = getCurrentPrice();
     
     productName.textContent = products[currentModel].name;
     productColor.textContent = currentColor;
-    productPrice.textContent = `R$ ${PRODUCT_PRICE.toFixed(2).replace('.', ',')}`;
+    productPrice.textContent = `R$ ${price.toFixed(2).replace('.', ',')}`;
     
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
@@ -354,10 +455,11 @@ function openCheckoutModal() {
     const summaryProduct = document.getElementById('summaryProduct');
     const summaryColor = document.getElementById('summaryColor');
     const summaryTotal = document.getElementById('summaryTotal');
+    const price = getCurrentPrice();
     
     summaryProduct.textContent = products[currentModel].name;
     summaryColor.textContent = currentColor;
-    summaryTotal.textContent = `R$ ${PRODUCT_PRICE.toFixed(2).replace('.', ',')}`;
+    summaryTotal.textContent = `R$ ${price.toFixed(2).replace('.', ',')}`;
     
     // Limpa o formulário
     document.getElementById('checkoutForm').reset();
@@ -507,15 +609,17 @@ function initFormValidation() {
         
         // Gera ID do pedido único
         const orderId = 'ORDER_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        const currentPrice = getCurrentPrice();
         formData.orderId = orderId;
         formData.timestamp = Date.now();
         formData.dataHora = new Date().toLocaleString('pt-BR');
+        formData.valor = currentPrice;
         
         // Prepara mensagem para WhatsApp (sempre será enviada)
         const message = `Olá! Meu pedido foi realizado:\n\n` +
             `📱 Produto: ${formData.produto}\n` +
             `🎨 Cor: ${formData.cor}\n` +
-            `💰 Valor: R$ ${formData.valor.toFixed(2).replace('.', ',')}\n` +
+            `💰 Valor: R$ ${currentPrice.toFixed(2).replace('.', ',')}\n` +
             `🚚 Frete: ${formData.frete}\n\n` +
             `👤 Nome: ${formData.nomeCompleto}\n` +
             `📧 Email: ${formData.email}\n` +
