@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BedConnect - Aplicativo de Acessibilidade</title>
+    <title>BedConnect - Sistema de Acessibilidade</title>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -17,9 +17,30 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        :root {
+            --primary: #2c3e50;
+            --primary-dark: #1a252f;
+            --primary-light: #34495e;
+            --secondary: #3498db;
+            --secondary-dark: #2980b9;
+            --accent: #1abc9c;
+            --accent-dark: #16a085;
+            --danger: #e74c3c;
+            --danger-dark: #c0392b;
+            --warning: #f39c12;
+            --success: #27ae60;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #95a5a6;
+            --gray-light: #bdc3c7;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+            --transition: all 0.3s ease;
+        }
+        
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--light);
             min-height: 100vh;
             padding: 20px;
         }
@@ -27,11 +48,12 @@
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         header {
@@ -42,12 +64,14 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            color: var(--light);
+            font-weight: 600;
         }
         
         .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
+            font-size: 1.1rem;
+            opacity: 0.8;
+            color: var(--gray-light);
         }
         
         .screen {
@@ -56,6 +80,12 @@
         
         .active {
             display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .form-group {
@@ -66,38 +96,109 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
+            color: var(--light);
         }
         
-        input {
+        input, select {
             width: 100%;
             padding: 15px;
             border: none;
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius);
+            background-color: rgba(255, 255, 255, 0.1);
             font-size: 1rem;
+            color: var(--light);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        input::placeholder {
+            color: var(--gray);
         }
         
         button {
-            background-color: #4CAF50;
+            background-color: var(--secondary);
             color: white;
             border: none;
             padding: 15px 25px;
-            border-radius: 10px;
-            font-size: 1.1rem;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             width: 100%;
             margin-top: 10px;
+            box-shadow: var(--shadow);
         }
         
         button:hover {
-            background-color: #45a049;
+            background-color: var(--secondary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-dark);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: var(--danger-dark);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        
+        .btn-accent {
+            background-color: var(--accent);
+        }
+        
+        .btn-accent:hover {
+            background-color: var(--accent-dark);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--secondary);
+            color: white;
         }
         
         .alert-button {
-            background-color: #f44336;
+            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
             height: 200px;
             font-size: 2rem;
             font-weight: bold;
@@ -107,11 +208,12 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
         }
         
         .alert-button:hover {
-            background-color: #d32f2f;
             transform: scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
         }
         
         .message-buttons {
@@ -122,34 +224,44 @@
         }
         
         .message-btn {
-            background-color: #2196F3;
+            background-color: var(--primary-light);
             height: 80px;
             font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         .message-btn:hover {
-            background-color: #0b7dda;
+            background-color: var(--primary);
         }
         
         .back-button {
-            background-color: #757575;
-            margin-top: 20px;
+            background-color: var(--gray);
+        }
+        
+        .back-button:hover {
+            background-color: #7f8c8d;
         }
         
         .status {
             text-align: center;
-            padding: 10px;
+            padding: 15px;
             margin: 20px 0;
-            border-radius: 10px;
+            border-radius: var(--radius);
             font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .connected {
-            background-color: rgba(76, 175, 80, 0.3);
+            background-color: rgba(39, 174, 96, 0.2);
+            border-color: rgba(39, 174, 96, 0.3);
         }
         
         .disconnected {
-            background-color: rgba(244, 67, 54, 0.3);
+            background-color: rgba(231, 76, 60, 0.2);
+            border-color: rgba(231, 76, 60, 0.3);
         }
         
         .user-list {
@@ -159,41 +271,129 @@
         }
         
         .user-item {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.05);
             padding: 15px;
-            border-radius: 10px;
+            border-radius: var(--radius);
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+        
+        .user-item:hover {
+            background-color: rgba(255, 255, 255, 0.08);
         }
         
         .connect-btn {
             width: auto;
             padding: 8px 15px;
             margin: 0;
+            font-size: 0.9rem;
         }
         
         .logout-btn {
-            background-color: #ff9800;
-            margin-top: 20px;
+            background-color: var(--warning);
         }
         
         .logout-btn:hover {
-            background-color: #f57c00;
+            background-color: #e67e22;
         }
         
         .debug-info {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.2);
             padding: 10px;
-            border-radius: 5px;
+            border-radius: var(--radius);
             margin-top: 10px;
             font-size: 0.9rem;
+            color: var(--gray-light);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .caregiver-link {
+            background-color: var(--accent);
+        }
+        
+        .caregiver-link:hover {
+            background-color: var(--accent-dark);
+        }
+        
+        .alert-item {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            border-left: 5px solid var(--danger);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .alert-emergency {
+            border-left-color: var(--danger);
+            background-color: rgba(231, 76, 60, 0.1);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .alert-water {
+            border-left-color: var(--secondary);
+        }
+        
+        .alert-help {
+            border-left-color: var(--warning);
+        }
+        
+        .alert-bathroom {
+            border-left-color: var(--success);
+        }
+        
+        .room-info {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: var(--radius);
+            margin: 15px 0;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .animal-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .animal-option {
+            padding: 12px;
+            border-radius: var(--radius);
+            background-color: rgba(255, 255, 255, 0.05);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .animal-option:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .animal-option.selected {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
         }
         
         @media (min-width: 768px) {
             .message-buttons {
                 grid-template-columns: 1fr 1fr;
+            }
+            
+            .animal-selector {
+                grid-template-columns: repeat(5, 1fr);
             }
         }
     </style>
@@ -204,8 +404,8 @@
         <div id="login-screen" class="screen active">
             <header>
                 <h1>BedConnect</h1>
-                <p class="subtitle">Acessibilidade para pessoas com mobilidade reduzida</p>
-                <div id="firebase-status" class="status" style="background-color: rgba(255, 193, 7, 0.3);">
+                <p class="subtitle">Sistema de Acessibilidade para Mobilidade Reduzida</p>
+                <div id="firebase-status" class="status" style="background-color: rgba(243, 156, 18, 0.2);">
                     🔄 Testando conexão com Firebase...
                 </div>
             </header>
@@ -216,12 +416,12 @@
             </div>
             
             <div class="form-group">
-                <label for="login-birthdate">Data de Nascimento</label>
-                <input type="date" id="login-birthdate">
+                <label for="login-password">Senha</label>
+                <input type="password" id="login-password" placeholder="Digite sua senha">
             </div>
             
-            <button id="login-btn">Entrar</button>
-            <button id="go-to-register">Não tenho cadastro</button>
+            <button id="login-btn" class="btn-primary">Entrar</button>
+            <button id="go-to-register" class="btn-outline">Não tenho cadastro</button>
             
             <div id="login-status" class="status" style="display: none;"></div>
             
@@ -244,11 +444,18 @@
             </div>
             
             <div class="form-group">
-                <label for="register-birthdate">Data de Nascimento</label>
-                <input type="date" id="register-birthdate">
+                <label for="register-password">Senha</label>
+                <input type="password" id="register-password" placeholder="Crie uma senha">
             </div>
             
-            <button id="register-btn">Cadastrar</button>
+            <div class="form-group">
+                <label>Escolha um Animal</label>
+                <div class="animal-selector" id="animal-selector">
+                    <!-- Os animais serão adicionados via JavaScript -->
+                </div>
+            </div>
+            
+            <button id="register-btn" class="btn-success">Cadastrar</button>
             <button class="back-button" id="back-to-login">Voltar para o Login</button>
             
             <div id="register-status" class="status" style="display: none;"></div>
@@ -265,17 +472,21 @@
                 <h1>BedConnect</h1>
                 <div id="connection-status" class="status disconnected">❌ Desconectado - Conecte-se com alguém</div>
                 <div id="user-info" style="text-align: center; margin-bottom: 10px;"></div>
+                <div id="room-info" class="room-info" style="display: none;">
+                    <!-- Informações da sala serão exibidas aqui -->
+                </div>
             </header>
             
-            <button id="alert-button" class="alert-button">ALERTA</button>
+            <button id="alert-button" class="alert-button btn-danger">ALERTA DE EMERGÊNCIA</button>
             
             <div class="message-buttons">
-                <button class="message-btn" data-message="Quero água">Quero Água</button>
-                <button class="message-btn" data-message="Preciso de ajuda">Preciso de Ajuda</button>
-                <button class="message-btn" data-message="Quero ir ao banheiro">Quero ir ao Banheiro</button>
+                <button class="message-btn" data-message="Quero água">💧 Quero Água</button>
+                <button class="message-btn" data-message="Preciso de ajuda">🆘 Preciso de Ajuda</button>
+                <button class="message-btn" data-message="Quero ir ao banheiro">🚽 Quero ir ao Banheiro</button>
             </div>
             
-            <button id="connect-screen-btn">Gerenciar Conexões</button>
+            <button id="connect-screen-btn" class="btn-accent">Gerenciar Conexões</button>
+            <button id="caregiver-link-btn" class="caregiver-link" style="display: none;">Abrir Tela do Cuidador</button>
             <button class="logout-btn" id="logout-btn">Sair</button>
             
             <div class="debug-info">
@@ -297,12 +508,15 @@
             </div>
             
             <div class="form-group">
-                <label for="search-birthdate">Data de Nascimento</label>
-                <input type="date" id="search-birthdate">
+                <label for="search-animal">Animal Escolhido</label>
+                <select id="search-animal">
+                    <option value="">Selecione um animal</option>
+                    <!-- As opções serão preenchidas via JavaScript -->
+                </select>
             </div>
             
-            <button id="search-btn">Buscar Usuários</button>
-            <button id="show-all-btn">Mostrar Todos os Usuários</button>
+            <button id="search-btn" class="btn-primary">Buscar Usuários</button>
+            <button id="show-all-btn" class="btn-outline">Mostrar Todos os Usuários</button>
             
             <div id="user-results" class="user-list">
                 <!-- Resultados da busca aparecerão aqui -->
@@ -313,6 +527,34 @@
             <div class="debug-info">
                 <strong>Debug Info:</strong>
                 <div id="debug-connect"></div>
+            </div>
+        </div>
+        
+        <!-- Tela do Cuidador (para a pessoa que está cuidando) -->
+        <div id="caregiver-screen" class="screen">
+            <header>
+                <h1>BedConnect - Tela do Cuidador</h1>
+                <p class="subtitle">Monitorando alertas do paciente</p>
+                <div id="caregiver-status" class="status">👂 Aguardando alertas...</div>
+                <div id="monitoring-info" style="text-align: center; margin-bottom: 10px;"></div>
+                <div id="caregiver-room-info" class="room-info" style="display: none;">
+                    <!-- Informações da sala do cuidador -->
+                </div>
+            </header>
+            
+            <div id="alerts-container">
+                <!-- Alertas aparecerão aqui -->
+                <div id="no-alerts-message" style="text-align: center; padding: 40px;">
+                    <h3>Nenhum alerta recebido ainda</h3>
+                    <p>Os alertas do paciente aparecerão aqui automaticamente</p>
+                </div>
+            </div>
+            
+            <button class="back-button" id="back-from-caregiver">Voltar para a Tela Principal</button>
+            
+            <div class="debug-info">
+                <strong>Debug Info:</strong>
+                <div id="debug-caregiver"></div>
             </div>
         </div>
     </div>
@@ -339,11 +581,26 @@
             updateDebug('login', '❌ Erro Firebase: ' + error.message);
         }
 
+        // Lista de animais predefinidos
+        const animais = [
+            { nome: "Gato", emoji: "🐱" },
+            { nome: "Cachorro", emoji: "🐶" },
+            { nome: "Pássaro", emoji: "🐦" },
+            { nome: "Peixe", emoji: "🐠" },
+            { nome: "Coelho", emoji: "🐰" },
+            { nome: "Tartaruga", emoji: "🐢" },
+            { nome: "Borboleta", emoji: "🦋" },
+            { nome: "Cavalo", emoji: "🐴" },
+            { nome: "Elefante", emoji: "🐘" },
+            { nome: "Leão", emoji: "🦁" }
+        ];
+
         // Elementos da interface
         const loginScreen = document.getElementById('login-screen');
         const registerScreen = document.getElementById('register-screen');
         const mainScreen = document.getElementById('main-screen');
         const connectScreen = document.getElementById('connect-screen');
+        const caregiverScreen = document.getElementById('caregiver-screen');
         
         const loginBtn = document.getElementById('login-btn');
         const registerBtn = document.getElementById('register-btn');
@@ -354,16 +611,65 @@
         const searchBtn = document.getElementById('search-btn');
         const showAllBtn = document.getElementById('show-all-btn');
         const logoutBtn = document.getElementById('logout-btn');
+        const caregiverLinkBtn = document.getElementById('caregiver-link-btn');
+        const backFromCaregiverBtn = document.getElementById('back-from-caregiver');
         
         const alertButton = document.getElementById('alert-button');
         const messageButtons = document.querySelectorAll('.message-btn');
         const connectionStatus = document.getElementById('connection-status');
         const userInfo = document.getElementById('user-info');
+        const roomInfo = document.getElementById('room-info');
+        const caregiverRoomInfo = document.getElementById('caregiver-room-info');
         const firebaseStatus = document.getElementById('firebase-status');
+        const caregiverStatus = document.getElementById('caregiver-status');
+        const monitoringInfo = document.getElementById('monitoring-info');
+        const alertsContainer = document.getElementById('alerts-container');
+        const noAlertsMessage = document.getElementById('no-alerts-message');
+        const animalSelector = document.getElementById('animal-selector');
+        const searchAnimalSelect = document.getElementById('search-animal');
 
         // Variáveis globais
         let currentUser = null;
         let connectedUser = null;
+        let currentRoomId = null;
+        let isCaregiverMode = false;
+        let roomListener = null;
+        let selectedAnimal = null;
+
+        // Inicializar seleção de animais
+        function inicializarAnimais() {
+            // Para o cadastro
+            animalSelector.innerHTML = '';
+            animais.forEach(animal => {
+                const animalOption = document.createElement('div');
+                animalOption.className = 'animal-option';
+                animalOption.innerHTML = `${animal.emoji} ${animal.nome}`;
+                animalOption.dataset.animal = animal.nome;
+                
+                animalOption.addEventListener('click', function() {
+                    // Remover seleção anterior
+                    document.querySelectorAll('.animal-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Selecionar atual
+                    this.classList.add('selected');
+                    selectedAnimal = this.dataset.animal;
+                    updateDebug('register', `Animal selecionado: ${selectedAnimal}`);
+                });
+                
+                animalSelector.appendChild(animalOption);
+            });
+            
+            // Para a busca
+            searchAnimalSelect.innerHTML = '<option value="">Selecione um animal</option>';
+            animais.forEach(animal => {
+                const option = document.createElement('option');
+                option.value = animal.nome;
+                option.textContent = `${animal.emoji} ${animal.nome}`;
+                searchAnimalSelect.appendChild(option);
+            });
+        }
 
         // ✅ TESTE DE CONEXÃO COM FIREBASE
         function testarConexaoFirebase() {
@@ -388,7 +694,7 @@
                     console.log("✅ Dados escritos no Firebase com sucesso!");
                     updateDebug('login', '✅ Dados escritos no Firebase');
                     firebaseStatus.textContent = '✅ Conectado ao Firebase!';
-                    firebaseStatus.style.backgroundColor = 'rgba(76, 175, 80, 0.3)';
+                    firebaseStatus.style.backgroundColor = 'rgba(39, 174, 96, 0.2)';
                     
                     // Teste de leitura
                     return testRef.once('value');
@@ -409,7 +715,7 @@
                     console.error("❌ Erro na conexão com Firebase:", error);
                     updateDebug('login', '❌ Erro: ' + error.message);
                     firebaseStatus.textContent = '❌ Erro na conexão com Firebase';
-                    firebaseStatus.style.backgroundColor = 'rgba(244, 67, 54, 0.3)';
+                    firebaseStatus.style.backgroundColor = 'rgba(231, 76, 60, 0.2)';
                 });
         }
 
@@ -453,28 +759,108 @@
             updateDebug('main', 'Voltou para tela principal');
         });
 
+        // Botão para abrir tela do cuidador
+        caregiverLinkBtn.addEventListener('click', () => {
+            if (!currentRoomId) {
+                alert('Você precisa estar em uma sala para abrir a tela do cuidador.');
+                return;
+            }
+            
+            // Abrir em nova aba com a sala específica
+            const caregiverUrl = window.location.href + `?mode=caregiver&roomId=${currentRoomId}&userId=${currentUser.id}`;
+            window.open(caregiverUrl, '_blank');
+        });
+
+        // Navegação da tela do cuidador
+        backFromCaregiverBtn.addEventListener('click', () => {
+            caregiverScreen.classList.remove('active');
+            mainScreen.classList.add('active');
+            isCaregiverMode = false;
+            stopRoomListening();
+            updateDebug('main', 'Voltou da tela do cuidador');
+        });
+
         // Logout
         logoutBtn.addEventListener('click', () => {
             currentUser = null;
             connectedUser = null;
+            currentRoomId = null;
+            stopRoomListening();
             mainScreen.classList.remove('active');
             loginScreen.classList.add('active');
             updateDebug('login', 'Usuário fez logout');
             alert('Você saiu do sistema.');
         });
 
+        // Verificar se deve abrir em modo cuidador
+        function checkUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const mode = urlParams.get('mode');
+            const roomId = urlParams.get('roomId');
+            const userId = urlParams.get('userId');
+            
+            if (mode === 'caregiver' && roomId && userId) {
+                // Estamos em modo cuidador
+                isCaregiverMode = true;
+                openCaregiverScreen(roomId, userId);
+            }
+        }
+
+        // Abrir tela do cuidador
+        function openCaregiverScreen(roomId, userId) {
+            // Buscar informações da sala
+            database.ref(`salas/${roomId}`).once('value')
+                .then(snapshot => {
+                    if (snapshot.exists()) {
+                        const roomData = snapshot.val();
+                        
+                        // Buscar informações do usuário paciente
+                        return database.ref(`usuarios/${roomData.pacienteId}`).once('value')
+                            .then(userSnapshot => {
+                                if (userSnapshot.exists()) {
+                                    const userData = userSnapshot.val();
+                                    
+                                    monitoringInfo.textContent = `Monitorando: ${userData.nome}`;
+                                    caregiverRoomInfo.innerHTML = `
+                                        <h3>📞 Sala Privada</h3>
+                                        <p><strong>Paciente:</strong> ${userData.nome}</p>
+                                        <p><strong>ID da Sala:</strong> ${roomId.substring(0, 8)}...</p>
+                                        <p><strong>Status:</strong> ✅ Conectado</p>
+                                    `;
+                                    caregiverRoomInfo.style.display = 'block';
+                                    
+                                    // Esconder todas as telas e mostrar a do cuidador
+                                    loginScreen.classList.remove('active');
+                                    registerScreen.classList.remove('active');
+                                    mainScreen.classList.remove('active');
+                                    connectScreen.classList.remove('active');
+                                    caregiverScreen.classList.add('active');
+                                    
+                                    // Iniciar monitoramento da sala específica
+                                    startMonitoringRoom(roomId, userData.nome);
+                                    updateDebug('caregiver', `👂 Iniciando monitoramento da sala: ${roomId}`);
+                                }
+                            });
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar dados da sala:', error);
+                    updateDebug('caregiver', '❌ Erro ao carregar sala: ' + error.message);
+                });
+        }
+
         // Sistema de Login
         loginBtn.addEventListener('click', () => {
             const name = document.getElementById('login-name').value.trim();
-            const birthdate = document.getElementById('login-birthdate').value;
+            const password = document.getElementById('login-password').value;
             
-            if (!name || !birthdate) {
+            if (!name || !password) {
                 showStatus('login-status', 'Por favor, preencha todos os campos.', 'error');
                 updateDebug('login', '❌ Campos não preenchidos');
                 return;
             }
 
-            updateDebug('login', `Tentando login: ${name}, ${birthdate}`);
+            updateDebug('login', `Tentando login: ${name}`);
             showStatus('login-status', 'Conectando...', 'loading');
             
             // Buscar usuário no Firebase
@@ -489,7 +875,7 @@
                         
                         for (const userId in users) {
                             const user = users[userId];
-                            if (user.nome === name && user.dataNascimento === birthdate) {
+                            if (user.nome === name && user.senha === password) {
                                 userFound = {
                                     id: userId,
                                     ...user
@@ -510,7 +896,7 @@
                             loginScreen.classList.remove('active');
                             mainScreen.classList.add('active');
                             updateUserInfo();
-                            checkConnections();
+                            checkActiveRoom();
                             updateDebug('main', `Usuário logado: ${currentUser.nome}`);
                         }, 1000);
                     } else {
@@ -528,15 +914,21 @@
         // Sistema de Cadastro
         registerBtn.addEventListener('click', () => {
             const name = document.getElementById('register-name').value.trim();
-            const birthdate = document.getElementById('register-birthdate').value;
+            const password = document.getElementById('register-password').value;
             
-            if (!name || !birthdate) {
+            if (!name || !password) {
                 showStatus('register-status', 'Por favor, preencha todos os campos.', 'error');
                 updateDebug('register', '❌ Campos não preenchidos');
                 return;
             }
+            
+            if (!selectedAnimal) {
+                showStatus('register-status', 'Por favor, selecione um animal.', 'error');
+                updateDebug('register', '❌ Animal não selecionado');
+                return;
+            }
 
-            updateDebug('register', `Tentando cadastro: ${name}, ${birthdate}`);
+            updateDebug('register', `Tentando cadastro: ${name}, animal: ${selectedAnimal}`);
             showStatus('register-status', 'Cadastrando...', 'loading');
             
             // Verificar se usuário já existe
@@ -551,7 +943,7 @@
                         
                         for (const userId in users) {
                             const user = users[userId];
-                            if (user.nome === name && user.dataNascimento === birthdate) {
+                            if (user.nome === name) {
                                 userExists = true;
                                 updateDebug('register', '❌ Usuário já existe');
                                 break;
@@ -566,7 +958,8 @@
                         const newUserRef = database.ref('usuarios').push();
                         const userData = {
                             nome: name,
-                            dataNascimento: birthdate,
+                            senha: password,
+                            animal: selectedAnimal,
                             dataCadastro: new Date().toISOString()
                         };
                         
@@ -584,7 +977,7 @@
                                 registerScreen.classList.remove('active');
                                 mainScreen.classList.add('active');
                                 updateUserInfo();
-                                checkConnections();
+                                checkActiveRoom();
                                 updateDebug('main', `Novo usuário: ${currentUser.nome}`);
                             }, 1000);
                         })
@@ -633,26 +1026,24 @@
                         const userItem = document.createElement('div');
                         userItem.className = 'user-item';
                         
-                        // Verificar se já está conectado
-                        const isConnected = currentUser.conexoes && currentUser.conexoes[userId];
+                        // Encontrar emoji do animal
+                        const animalEmoji = animais.find(a => a.nome === user.animal)?.emoji || '🐾';
                         
                         userItem.innerHTML = `
                             <div>
                                 <strong>${user.nome}</strong><br>
-                                <small>Nascimento: ${user.dataNascimento}</small>
+                                <small>Animal: ${animalEmoji} ${user.animal}</small>
                                 <small style="display: block; font-size: 0.8em;">ID: ${userId.substring(0, 8)}...</small>
                             </div>
-                            <button class="connect-btn" data-userid="${userId}" ${isConnected ? 'disabled' : ''}>
-                                ${isConnected ? '✅ Conectado' : '🔗 Conectar'}
+                            <button class="connect-btn" data-userid="${userId}">
+                                🔗 Conectar
                             </button>
                         `;
                         userResults.appendChild(userItem);
                         
-                        if (!isConnected) {
-                            userItem.querySelector('.connect-btn').addEventListener('click', function() {
-                                connectToUser(userId, user.nome);
-                            });
-                        }
+                        userItem.querySelector('.connect-btn').addEventListener('click', function() {
+                            createPrivateRoom(userId, user.nome);
+                        });
                     }
                     
                     if (!usersFound) {
@@ -672,15 +1063,15 @@
         // Buscar usuários para conectar
         searchBtn.addEventListener('click', () => {
             const name = document.getElementById('search-name').value.trim();
-            const birthdate = document.getElementById('search-birthdate').value;
+            const animal = document.getElementById('search-animal').value;
             
-            if (!name && !birthdate) {
+            if (!name && !animal) {
                 alert('Preencha pelo menos um campo para buscar.');
                 updateDebug('connect', '❌ Nenhum critério de busca');
                 return;
             }
             
-            updateDebug('connect', `🔍 Buscando: nome="${name}", data="${birthdate}"`);
+            updateDebug('connect', `🔍 Buscando: nome="${name}", animal="${animal}"`);
             const userResults = document.getElementById('user-results');
             userResults.innerHTML = '<p>Buscando usuários...</p>';
             
@@ -703,34 +1094,32 @@
                         // Não mostrar o próprio usuário
                         if (userId === currentUser.id) continue;
                         
-                        // Filtrar por nome e/ou data de nascimento
+                        // Filtrar por nome e/ou animal
                         const nameMatch = !name || user.nome.toLowerCase().includes(name.toLowerCase());
-                        const birthdateMatch = !birthdate || user.dataNascimento === birthdate;
+                        const animalMatch = !animal || user.animal === animal;
                         
-                        if (nameMatch && birthdateMatch) {
+                        if (nameMatch && animalMatch) {
                             usersFound = true;
                             const userItem = document.createElement('div');
                             userItem.className = 'user-item';
                             
-                            // Verificar se já está conectado
-                            const isConnected = currentUser.conexoes && currentUser.conexoes[userId];
+                            // Encontrar emoji do animal
+                            const animalEmoji = animais.find(a => a.nome === user.animal)?.emoji || '🐾';
                             
                             userItem.innerHTML = `
                                 <div>
                                     <strong>${user.nome}</strong><br>
-                                    <small>Nascimento: ${user.dataNascimento}</small>
+                                    <small>Animal: ${animalEmoji} ${user.animal}</small>
                                 </div>
-                                <button class="connect-btn" data-userid="${userId}" ${isConnected ? 'disabled' : ''}>
-                                    ${isConnected ? '✅ Conectado' : '🔗 Conectar'}
+                                <button class="connect-btn" data-userid="${userId}">
+                                    🔗 Conectar
                                 </button>
                             `;
                             userResults.appendChild(userItem);
                             
-                            if (!isConnected) {
-                                userItem.querySelector('.connect-btn').addEventListener('click', function() {
-                                    connectToUser(userId, user.nome);
-                                });
-                            }
+                            userItem.querySelector('.connect-btn').addEventListener('click', function() {
+                                createPrivateRoom(userId, user.nome);
+                            });
                         }
                     }
                     
@@ -751,109 +1140,224 @@
         // Mostrar todos os usuários
         showAllBtn.addEventListener('click', carregarTodosUsuarios);
         
-        // Conectar com usuário
-        function connectToUser(userId, userName) {
-            updateDebug('connect', `🔗 Tentando conectar com: ${userName} (${userId})`);
+        // Criar sala privada entre dois usuários
+        function createPrivateRoom(otherUserId, otherUserName) {
+            updateDebug('connect', `🔗 Criando sala privada com: ${otherUserName} (${otherUserId})`);
             
-            // Salvar conexão no usuário atual
-            database.ref(`usuarios/${currentUser.id}/conexoes/${userId}`).set(true)
+            // Gerar ID único para a sala
+            const roomId = database.ref('salas').push().key;
+            
+            const roomData = {
+                id: roomId,
+                pacienteId: currentUser.id,
+                pacienteNome: currentUser.nome,
+                cuidadorId: otherUserId,
+                cuidadorNome: otherUserName,
+                dataCriacao: new Date().toISOString(),
+                status: 'ativa'
+            };
+            
+            updateDebug('connect', `📝 Dados da sala: ${JSON.stringify(roomData)}`);
+            
+            // Salvar sala no Firebase
+            database.ref(`salas/${roomId}`).set(roomData)
                 .then(() => {
-                    updateDebug('connect', `✅ Conexão salva em ${currentUser.id}`);
+                    updateDebug('connect', `✅ Sala criada: ${roomId}`);
                     
-                    // Salvar conexão no outro usuário também (conexão bidirecional)
-                    return database.ref(`usuarios/${userId}/conexoes/${currentUser.id}`).set(true);
+                    // Salvar referência da sala nos usuários
+                    const updates = {};
+                    updates[`usuarios/${currentUser.id}/salaAtiva`] = roomId;
+                    updates[`usuarios/${otherUserId}/salaAtiva`] = roomId;
+                    
+                    return database.ref().update(updates);
                 })
                 .then(() => {
-                    updateDebug('connect', `✅ Conexão bidirecional salva em ${userId}`);
+                    updateDebug('connect', `✅ Referências da sala salvas nos usuários`);
                     
                     connectedUser = {
-                        id: userId,
-                        nome: userName
+                        id: otherUserId,
+                        nome: otherUserName
                     };
                     
-                    // Atualizar currentUser localmente
-                    if (!currentUser.conexoes) currentUser.conexoes = {};
-                    currentUser.conexoes[userId] = true;
+                    currentRoomId = roomId;
                     
                     updateConnectionStatus();
-                    updateDebug('connect', `🎉 Conectado com ${userName}!`);
-                    alert(`✅ Conectado com ${userName}!`);
+                    updateRoomInfo();
+                    updateDebug('connect', `🎉 Sala privada criada com ${otherUserName}!`);
+                    
+                    alert(`✅ Sala privada criada com ${otherUserName}!\n\nAgora vocês têm uma comunicação exclusiva.`);
+                    
+                    // Voltar para tela principal
+                    connectScreen.classList.remove('active');
+                    mainScreen.classList.add('active');
+                    
+                    // Iniciar escuta da sala
+                    startRoomListening();
                     
                     // Atualizar lista de usuários
                     carregarTodosUsuarios();
                 })
                 .catch(error => {
-                    console.error('Erro ao conectar:', error);
-                    updateDebug('connect', '❌ Erro na conexão: ' + error.message);
-                    alert('❌ Erro ao conectar. Tente novamente.');
+                    console.error('Erro ao criar sala:', error);
+                    updateDebug('connect', '❌ Erro na criação da sala: ' + error.message);
+                    alert('❌ Erro ao criar sala. Tente novamente.');
                 });
         }
         
-        // Verificar conexões do usuário
-        function checkConnections() {
+        // Verificar se o usuário já tem uma sala ativa
+        function checkActiveRoom() {
             if (!currentUser) return;
             
-            updateDebug('main', '🔍 Verificando conexões...');
+            updateDebug('main', '🔍 Verificando sala ativa...');
             
-            database.ref(`usuarios/${currentUser.id}/conexoes`).once('value')
+            database.ref(`usuarios/${currentUser.id}/salaAtiva`).once('value')
                 .then(snapshot => {
                     if (snapshot.exists()) {
-                        const connections = snapshot.val();
-                        updateDebug('main', `📞 ${Object.keys(connections).length} conexões encontradas`);
+                        const roomId = snapshot.val();
+                        updateDebug('main', `📞 Sala ativa encontrada: ${roomId}`);
                         
-                        // Pegar a primeira conexão
-                        const connectedUserId = Object.keys(connections)[0];
-                        
-                        // Buscar dados do usuário conectado
-                        return database.ref(`usuarios/${connectedUserId}`).once('value');
+                        // Buscar dados da sala
+                        return database.ref(`salas/${roomId}`).once('value');
                     } else {
-                        updateDebug('main', '📞 Nenhuma conexão encontrada');
+                        updateDebug('main', '📞 Nenhuma sala ativa encontrada');
                         connectedUser = null;
+                        currentRoomId = null;
                         updateConnectionStatus();
                     }
                 })
-                .then(userSnapshot => {
-                    if (userSnapshot && userSnapshot.exists()) {
-                        const userData = userSnapshot.val();
-                        connectedUser = {
-                            id: userSnapshot.key,
-                            nome: userData.nome
-                        };
-                        updateDebug('main', `✅ Conectado com: ${connectedUser.nome}`);
+                .then(roomSnapshot => {
+                    if (roomSnapshot && roomSnapshot.exists()) {
+                        const roomData = roomSnapshot.val();
+                        
+                        // Determinar quem é o outro usuário na sala
+                        if (roomData.pacienteId === currentUser.id) {
+                            connectedUser = {
+                                id: roomData.cuidadorId,
+                                nome: roomData.cuidadorNome
+                            };
+                        } else {
+                            connectedUser = {
+                                id: roomData.pacienteId,
+                                nome: roomData.pacienteNome
+                            };
+                        }
+                        
+                        currentRoomId = roomData.id;
+                        
+                        updateDebug('main', `✅ Conectado em sala com: ${connectedUser.nome}`);
                         updateConnectionStatus();
+                        updateRoomInfo();
+                        
+                        // Mostrar botão para abrir tela do cuidador
+                        caregiverLinkBtn.style.display = 'block';
+                        
+                        // Iniciar escuta da sala
+                        startRoomListening();
                     }
                 })
                 .catch(error => {
-                    console.error('Erro ao verificar conexões:', error);
-                    updateDebug('main', '❌ Erro nas conexões: ' + error.message);
+                    console.error('Erro ao verificar sala:', error);
+                    updateDebug('main', '❌ Erro na verificação da sala: ' + error.message);
                 });
         }
         
         // Atualizar informações do usuário
         function updateUserInfo() {
             if (currentUser) {
-                userInfo.textContent = `👤 Usuário: ${currentUser.nome} | ID: ${currentUser.id.substring(0, 8)}...`;
+                const animalEmoji = animais.find(a => a.nome === currentUser.animal)?.emoji || '🐾';
+                userInfo.innerHTML = `
+                    👤 Usuário: ${currentUser.nome} 
+                    | Animal: ${animalEmoji} ${currentUser.animal}
+                    | ID: ${currentUser.id.substring(0, 8)}...
+                `;
+            }
+        }
+        
+        // Atualizar informações da sala
+        function updateRoomInfo() {
+            if (currentRoomId && connectedUser) {
+                roomInfo.innerHTML = `
+                    <h3>🔒 Sala Privada</h3>
+                    <p><strong>Conectado com:</strong> ${connectedUser.nome}</p>
+                    <p><strong>ID da Sala:</strong> ${currentRoomId.substring(0, 8)}...</p>
+                    <p><strong>Status:</strong> ✅ Comunicação segura</p>
+                `;
+                roomInfo.style.display = 'block';
+            } else {
+                roomInfo.style.display = 'none';
             }
         }
         
         // Atualizar status de conexão
         function updateConnectionStatus() {
-            if (connectedUser) {
-                connectionStatus.textContent = `✅ Conectado com: ${connectedUser.nome}`;
+            if (connectedUser && currentRoomId) {
+                connectionStatus.textContent = `✅ Conectado em sala privada com: ${connectedUser.nome}`;
                 connectionStatus.className = 'status connected';
-                updateDebug('main', `🔗 Status: Conectado com ${connectedUser.nome}`);
+                updateDebug('main', `🔗 Status: Conectado em sala com ${connectedUser.nome}`);
+                caregiverLinkBtn.style.display = 'block';
             } else {
-                connectionStatus.textContent = '❌ Desconectado - Conecte-se com alguém';
+                connectionStatus.textContent = '❌ Desconectado - Crie uma sala com alguém';
                 connectionStatus.className = 'status disconnected';
                 updateDebug('main', '🔗 Status: Desconectado');
+                caregiverLinkBtn.style.display = 'none';
+                roomInfo.style.display = 'none';
+            }
+        }
+        
+        // Iniciar escuta da sala para alertas
+        function startRoomListening() {
+            if (!currentRoomId) return;
+            
+            updateDebug('main', `👂 Iniciando escuta da sala: ${currentRoomId}`);
+            
+            // Parar listener anterior se existir
+            stopRoomListening();
+            
+            // Escutar novos alertas na sala específica
+            roomListener = database.ref(`salas/${currentRoomId}/alertas`).orderByChild('timestamp').on('child_added', (snapshot) => {
+                const alerta = snapshot.val();
+                updateDebug('main', `📨 Alerta recebido na sala: ${JSON.stringify(alerta)}`);
+                
+                // Verificar se o alerta é para o usuário atual
+                if (alerta.destinatario === currentUser.id) {
+                    updateDebug('main', `🎯 Alerta para este usuário: ${alerta.mensagem}`);
+                    
+                    // Mostrar notificação
+                    showNotification(alerta.mensagem, alerta.remetenteNome);
+                    
+                    // Tocar som de alerta
+                    playAlertSound();
+                    
+                    // Mostrar alerta na tela
+                    if (alerta.tipo === 'emergencia') {
+                        alert(`🚨 ALERTA DE EMERGÊNCIA!\nDe: ${alerta.remetenteNome}\nMensagem: ${alerta.mensagem}`);
+                    } else {
+                        alert(`📩 Nova Mensagem!\nDe: ${alerta.remetenteNome}\nMensagem: ${alerta.mensagem}`);
+                    }
+                    
+                    // Remover alerta após ser lido
+                    setTimeout(() => {
+                        snapshot.ref.remove();
+                        updateDebug('main', '🗑️ Alerta removido da sala');
+                    }, 5000);
+                }
+            });
+        }
+        
+        // Parar de escutar a sala
+        function stopRoomListening() {
+            if (roomListener && currentRoomId) {
+                database.ref(`salas/${currentRoomId}/alertas`).off('child_added', roomListener);
+                roomListener = null;
+                updateDebug('main', '🔇 Parou de escutar a sala');
             }
         }
         
         // Enviar alerta
         alertButton.addEventListener('click', () => {
-            if (!connectedUser) {
-                alert('Você precisa estar conectado com alguém para enviar alertas.');
-                updateDebug('main', '❌ Tentativa de alerta sem conexão');
+            if (!connectedUser || !currentRoomId) {
+                alert('Você precisa estar em uma sala privada para enviar alertas.');
+                updateDebug('main', '❌ Tentativa de alerta sem sala');
                 return;
             }
             
@@ -864,8 +1368,8 @@
         // Enviar mensagens predefinidas
         messageButtons.forEach(button => {
             button.addEventListener('click', function() {
-                if (!connectedUser) {
-                    alert('Você precisa estar conectado com alguém para enviar mensagens.');
+                if (!connectedUser || !currentRoomId) {
+                    alert('Você precisa estar em uma sala privada para enviar mensagens.');
                     return;
                 }
                 
@@ -881,9 +1385,9 @@
             });
         });
         
-        // Função para enviar alerta/mensagem
+        // Função para enviar alerta/mensagem na sala privada
         function sendAlert(tipo, mensagem) {
-            const alertaRef = database.ref('alertas').push();
+            const alertaRef = database.ref(`salas/${currentRoomId}/alertas`).push();
             const timestamp = new Date().toISOString();
             const alertaData = {
                 remetente: currentUser.id,
@@ -896,13 +1400,13 @@
                 lido: false
             };
             
-            updateDebug('main', `📝 Enviando alerta: ${JSON.stringify(alertaData)}`);
+            updateDebug('main', `📝 Enviando alerta na sala: ${JSON.stringify(alertaData)}`);
             
             alertaRef.set(alertaData)
             .then(() => {
                 alert('✅ Mensagem enviada com sucesso!');
-                updateDebug('main', '✅ Alerta enviado com sucesso');
-                console.log('📤 Alerta enviado:', alertaData);
+                updateDebug('main', '✅ Alerta enviado na sala');
+                console.log('📤 Alerta enviado na sala:', alertaData);
             })
             .catch(error => {
                 console.error('Erro ao enviar alerta:', error);
@@ -911,40 +1415,80 @@
             });
         }
         
-        // Verificar alertas recebidos (para a pessoa que está cuidando)
-        function checkForAlerts() {
-            if (!currentUser) return;
+        // Iniciar monitoramento de alertas na sala (para a tela do cuidador)
+        function startMonitoringRoom(roomId, userName) {
+            updateDebug('caregiver', `👂 Iniciando monitoramento da sala: ${roomId}`);
+            caregiverStatus.textContent = `👂 Monitorando alertas de ${userName}`;
             
-            updateDebug('main', '👂 Ouvindo alertas...');
+            // Limpar alertas anteriores
+            alertsContainer.innerHTML = '';
+            noAlertsMessage.style.display = 'block';
             
-            database.ref('alertas').orderByChild('timestamp').on('child_added', (snapshot) => {
+            // Ouvir novos alertas na sala específica
+            database.ref(`salas/${roomId}/alertas`).orderByChild('timestamp').on('child_added', (snapshot) => {
                 const alerta = snapshot.val();
-                updateDebug('main', `📨 Alerta recebido: ${JSON.stringify(alerta)}`);
+                updateDebug('caregiver', `📨 Alerta recebido na sala: ${JSON.stringify(alerta)}`);
                 
-                // Verificar se o alerta é para o usuário atual
-                if (alerta.destinatario === currentUser.id) {
-                    updateDebug('main', `🎯 Alerta destinado a este usuário: ${alerta.mensagem}`);
-                    
-                    // Mostrar notificação
-                    showNotification(alerta.mensagem, alerta.remetenteNome);
-                    
-                    // Tocar som de alerta
-                    playAlertSound();
-                    
-                    // Mostrar alerta na tela
-                    if (alerta.tipo === 'emergencia') {
-                        alert(`🚨 ALERTA DE EMERGÊNCIA!\nDe: ${alerta.remetenteNome}\nMensagem: ${alerta.mensagem}`);
-                    } else {
-                        alert(`📩 Nova Mensagem!\nDe: ${alerta.remetenteNome}\nMensagem: ${alerta.mensagem}`);
-                    }
-                    
-                    // Marcar como lido e remover após alguns segundos
-                    setTimeout(() => {
-                        snapshot.ref.remove();
-                        updateDebug('main', '🗑️ Alerta removido');
-                    }, 5000);
-                }
+                // Mostrar alerta na tela
+                displayAlert(alerta);
+                
+                // Tocar som de alerta
+                playAlertSound();
+                
+                // Mostrar notificação
+                showNotification(alerta.mensagem, alerta.remetenteNome);
+                
+                // Remover alerta após 30 segundos
+                setTimeout(() => {
+                    snapshot.ref.remove();
+                    updateDebug('caregiver', '🗑️ Alerta removido da sala');
+                }, 30000);
             });
+        }
+        
+        // Mostrar alerta na tela do cuidador
+        function displayAlert(alerta) {
+            noAlertsMessage.style.display = 'none';
+            
+            const alertItem = document.createElement('div');
+            alertItem.className = `alert-item alert-${alerta.tipo}`;
+            if (alerta.tipo === 'emergencia') {
+                alertItem.classList.add('alert-emergency');
+            }
+            
+            // Formatar a hora
+            const alertTime = new Date(alerta.timestamp).toLocaleTimeString('pt-BR');
+            
+            alertItem.innerHTML = `
+                <h3>🚨 Alerta de ${alerta.remetenteNome}</h3>
+                <p><strong>Mensagem:</strong> ${alerta.mensagem}</p>
+                <p><strong>Horário:</strong> ${alertTime}</p>
+                <p><strong>Tipo:</strong> ${getTipoDescricao(alerta.tipo)}</p>
+                <p><strong>Local:</strong> 🔒 Sala Privada</p>
+            `;
+            
+            // Adicionar no topo da lista
+            alertsContainer.insertBefore(alertItem, alertsContainer.firstChild);
+            
+            // Limitar a 10 alertas na tela
+            const allAlerts = alertsContainer.querySelectorAll('.alert-item');
+            if (allAlerts.length > 10) {
+                alertsContainer.removeChild(allAlerts[allAlerts.length - 1]);
+            }
+            
+            updateDebug('caregiver', `📋 Alerta exibido: ${alerta.mensagem}`);
+        }
+        
+        // Obter descrição do tipo de alerta
+        function getTipoDescricao(tipo) {
+            const tipos = {
+                'emergencia': '🚨 Emergência',
+                'agua': '💧 Água',
+                'ajuda': '🆘 Ajuda',
+                'banheiro': '🚽 Banheiro',
+                'mensagem': '📩 Mensagem'
+            };
+            return tipos[tipo] || '📩 Mensagem';
         }
         
         // Mostrar notificação
@@ -955,7 +1499,7 @@
                     icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🔔</text></svg>',
                     requireInteraction: true
                 });
-                updateDebug('main', '🔔 Notificação exibida');
+                updateDebug('caregiver', '🔔 Notificação exibida');
             } else if ('Notification' in window && Notification.permission !== 'denied') {
                 Notification.requestPermission().then(permission => {
                     if (permission === 'granted') {
@@ -963,7 +1507,7 @@
                             body: `De: ${remetente}\n${mensagem}`,
                             icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🔔</text></svg>'
                         });
-                        updateDebug('main', '🔔 Notificação exibida após permissão');
+                        updateDebug('caregiver', '🔔 Notificação exibida após permissão');
                     }
                 });
             }
@@ -988,10 +1532,10 @@
                 setTimeout(() => {
                     oscillator.stop();
                 }, 1000);
-                updateDebug('main', '🔊 Som de alerta tocado');
+                updateDebug('caregiver', '🔊 Som de alerta tocado');
             } catch (error) {
                 console.log('🔇 Não foi possível tocar o som de alerta');
-                updateDebug('main', '🔇 Erro no som de alerta');
+                updateDebug('caregiver', '🔇 Erro no som de alerta');
             }
         }
         
@@ -1002,11 +1546,11 @@
             element.style.display = 'block';
             
             if (type === 'success') {
-                element.style.backgroundColor = 'rgba(76, 175, 80, 0.3)';
+                element.style.backgroundColor = 'rgba(39, 174, 96, 0.2)';
             } else if (type === 'error') {
-                element.style.backgroundColor = 'rgba(244, 67, 54, 0.3)';
+                element.style.backgroundColor = 'rgba(231, 76, 60, 0.2)';
             } else if (type === 'loading') {
-                element.style.backgroundColor = 'rgba(255, 193, 7, 0.3)';
+                element.style.backgroundColor = 'rgba(243, 156, 18, 0.2)';
             }
             
             setTimeout(() => {
@@ -1014,8 +1558,9 @@
             }, 3000);
         }
 
-        // Inicializar verificação de alertas
-        checkForAlerts();
+        // Inicialização
+        inicializarAnimais();
+        checkUrlParams();
 
         // Solicitar permissão para notificações
         if ('Notification' in window && Notification.permission === 'default') {
