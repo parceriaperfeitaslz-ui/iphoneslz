@@ -3,406 +3,1028 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iPhone Store MA - Ofertas Especiais em São Luís | Entrega Rápida e Segura</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <title>BedConnect - Aplicativo de Acessibilidade</title>
+    
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .screen {
+            display: none;
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .alert-button {
+            background-color: #f44336;
+            height: 200px;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 30px 0;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .alert-button:hover {
+            background-color: #d32f2f;
+            transform: scale(1.02);
+        }
+        
+        .message-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .message-btn {
+            background-color: #2196F3;
+            height: 80px;
+            font-size: 1.2rem;
+        }
+        
+        .message-btn:hover {
+            background-color: #0b7dda;
+        }
+        
+        .back-button {
+            background-color: #757575;
+            margin-top: 20px;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .connected {
+            background-color: rgba(76, 175, 80, 0.3);
+        }
+        
+        .disconnected {
+            background-color: rgba(244, 67, 54, 0.3);
+        }
+        
+        .user-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .user-item {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .connect-btn {
+            width: auto;
+            padding: 8px 15px;
+            margin: 0;
+        }
+        
+        .logout-btn {
+            background-color: #ff9800;
+            margin-top: 20px;
+        }
+        
+        .logout-btn:hover {
+            background-color: #f57c00;
+        }
+        
+        .debug-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        @media (min-width: 768px) {
+            .message-buttons {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Banner Black Friday -->
-    <div class="black-friday-banner">
-        <div class="banner-content">
-            <span class="pulse">⚡</span>
-            <span>OFERTAS ESPECIAIS - ESTOQUE LIMITADO | ENTREGA RÁPIDA E SEGURA EM SÃO LUÍS</span>
-            <span class="pulse">⚡</span>
+    <div class="container">
+        <!-- Tela de Login -->
+        <div id="login-screen" class="screen active">
+            <header>
+                <h1>BedConnect</h1>
+                <p class="subtitle">Acessibilidade para pessoas com mobilidade reduzida</p>
+                <div id="firebase-status" class="status" style="background-color: rgba(255, 193, 7, 0.3);">
+                    🔄 Testando conexão com Firebase...
+                </div>
+            </header>
+            
+            <div class="form-group">
+                <label for="login-name">Nome Completo</label>
+                <input type="text" id="login-name" placeholder="Digite seu nome completo">
+            </div>
+            
+            <div class="form-group">
+                <label for="login-birthdate">Data de Nascimento</label>
+                <input type="date" id="login-birthdate">
+            </div>
+            
+            <button id="login-btn">Entrar</button>
+            <button id="go-to-register">Não tenho cadastro</button>
+            
+            <div id="login-status" class="status" style="display: none;"></div>
+            
+            <div class="debug-info">
+                <strong>Debug Info:</strong>
+                <div id="debug-login"></div>
+            </div>
+        </div>
+        
+        <!-- Tela de Cadastro -->
+        <div id="register-screen" class="screen">
+            <header>
+                <h1>Criar Conta</h1>
+                <p class="subtitle">Cadastre-se para usar o BedConnect</p>
+            </header>
+            
+            <div class="form-group">
+                <label for="register-name">Nome Completo</label>
+                <input type="text" id="register-name" placeholder="Digite seu nome completo">
+            </div>
+            
+            <div class="form-group">
+                <label for="register-birthdate">Data de Nascimento</label>
+                <input type="date" id="register-birthdate">
+            </div>
+            
+            <button id="register-btn">Cadastrar</button>
+            <button class="back-button" id="back-to-login">Voltar para o Login</button>
+            
+            <div id="register-status" class="status" style="display: none;"></div>
+            
+            <div class="debug-info">
+                <strong>Debug Info:</strong>
+                <div id="debug-register"></div>
+            </div>
+        </div>
+        
+        <!-- Tela Principal -->
+        <div id="main-screen" class="screen">
+            <header>
+                <h1>BedConnect</h1>
+                <div id="connection-status" class="status disconnected">❌ Desconectado - Conecte-se com alguém</div>
+                <div id="user-info" style="text-align: center; margin-bottom: 10px;"></div>
+            </header>
+            
+            <button id="alert-button" class="alert-button">ALERTA</button>
+            
+            <div class="message-buttons">
+                <button class="message-btn" data-message="Quero água">Quero Água</button>
+                <button class="message-btn" data-message="Preciso de ajuda">Preciso de Ajuda</button>
+                <button class="message-btn" data-message="Quero ir ao banheiro">Quero ir ao Banheiro</button>
+            </div>
+            
+            <button id="connect-screen-btn">Gerenciar Conexões</button>
+            <button class="logout-btn" id="logout-btn">Sair</button>
+            
+            <div class="debug-info">
+                <strong>Debug Info:</strong>
+                <div id="debug-main"></div>
+            </div>
+        </div>
+        
+        <!-- Tela de Conexões -->
+        <div id="connect-screen" class="screen">
+            <header>
+                <h1>Conectar com Usuários</h1>
+                <p class="subtitle">Encontre pessoas para se conectar</p>
+            </header>
+            
+            <div class="form-group">
+                <label for="search-name">Nome Completo</label>
+                <input type="text" id="search-name" placeholder="Digite o nome completo">
+            </div>
+            
+            <div class="form-group">
+                <label for="search-birthdate">Data de Nascimento</label>
+                <input type="date" id="search-birthdate">
+            </div>
+            
+            <button id="search-btn">Buscar Usuários</button>
+            <button id="show-all-btn">Mostrar Todos os Usuários</button>
+            
+            <div id="user-results" class="user-list">
+                <!-- Resultados da busca aparecerão aqui -->
+            </div>
+            
+            <button class="back-button" id="back-to-main">Voltar para a Tela Principal</button>
+            
+            <div class="debug-info">
+                <strong>Debug Info:</strong>
+                <div id="debug-connect"></div>
+            </div>
         </div>
     </div>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="logo-section">
-                <h1 class="logo">iPhone Store MA</h1>
-                <p class="location-badge">📍 São Luís do Maranhão</p>
-            </div>
-            <div class="urgency-badge">
-                <span>⏰ Restam apenas <span id="total-stock">7</span> unidades!</span>
-            </div>
-        </div>
-    </header>
+    <script>
+        // 🔥 CONFIGURAÇÃO DO FIREBASE - Conectando ao seu banco
+        const firebaseConfig = {
+            databaseURL: "https://meu-app-acessibilidade-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="container">
-            <!-- Product Section -->
-            <section class="product-section">
-                <div class="product-gallery">
-                    <div class="carousel-container">
-                        <div class="carousel-wrapper" id="carousel">
-                            <div class="carousel-slide active">
-                                <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=600&fit=crop" alt="iPhone 1">
-                            </div>
-                            <div class="carousel-slide">
-                                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=600&fit=crop" alt="iPhone 2">
-                            </div>
-                            <div class="carousel-slide">
-                                <img src="https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=600&h=600&fit=crop" alt="iPhone 3">
-                            </div>
-                            <div class="carousel-slide">
-                                <img src="https://images.unsplash.com/photo-1573141597928-403fcee0e056?w=600&h=600&fit=crop" alt="iPhone 4">
-                            </div>
-                            <div class="carousel-slide">
-                                <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=600&h=600&fit=crop" alt="iPhone 5">
-                            </div>
-                            <div class="carousel-slide">
-                                <img src="https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=600&h=600&fit=crop" alt="iPhone 6">
-                            </div>
-                            <div class="carousel-slide">
-                                <img src="https://images.unsplash.com/photo-1616348436168-9dd1210b1c0a?w=600&h=600&fit=crop" alt="iPhone 7">
-                            </div>
-                            <div class="carousel-slide">
-                                <img src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&h=600&fit=crop" alt="iPhone 8">
-                            </div>
-                        </div>
-                        <button class="carousel-btn prev" id="prevBtn">‹</button>
-                        <button class="carousel-btn next" id="nextBtn">›</button>
-                        <div class="carousel-dots">
-                            <span class="dot active" data-slide="0"></span>
-                            <span class="dot" data-slide="1"></span>
-                            <span class="dot" data-slide="2"></span>
-                            <span class="dot" data-slide="3"></span>
-                            <span class="dot" data-slide="4"></span>
-                            <span class="dot" data-slide="5"></span>
-                            <span class="dot" data-slide="6"></span>
-                            <span class="dot" data-slide="7"></span>
-                        </div>
-                    </div>
-                </div>
+        // Debug inicial
+        console.log("🚀 Iniciando BedConnect...");
+        console.log("📡 Tentando conectar com Firebase:", firebaseConfig.databaseURL);
 
-                <div class="product-info">
-                    <!-- Product Header -->
-                    <div class="product-header">
-                        <div class="product-brand">Apple</div>
-                        <h2 class="product-title" id="productTitleDisplay">iPhone 15 - Oferta Especial com Entrega Rápida</h2>
-                        <div class="product-rating">
-                            <span class="stars-large">★★★★★</span>
-                            <span class="rating-text">4.9 (1.234 avaliações)</span>
-                        </div>
-                    </div>
+        // Inicializar Firebase
+        let database;
+        try {
+            const app = firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            console.log("✅ Firebase inicializado com sucesso!");
+            updateDebug('login', '✅ Firebase inicializado');
+        } catch (error) {
+            console.error("❌ Erro ao inicializar Firebase:", error);
+            updateDebug('login', '❌ Erro Firebase: ' + error.message);
+        }
 
-                    <!-- Price Section -->
-                    <div class="price-section">
-                        <div class="price-wrapper">
-                            <span class="old-price">De R$ 8.999,00</span>
-                            <span class="discount-badge">-99% OFF</span>
-                        </div>
-                        <span class="current-price" id="currentPriceDisplay">R$ 119,99</span>
-                        <div class="price-installment" id="priceInstallment">ou 12x de R$ 9,99 sem juros</div>
-                    </div>
+        // Elementos da interface
+        const loginScreen = document.getElementById('login-screen');
+        const registerScreen = document.getElementById('register-screen');
+        const mainScreen = document.getElementById('main-screen');
+        const connectScreen = document.getElementById('connect-screen');
+        
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const goToRegisterBtn = document.getElementById('go-to-register');
+        const backToLoginBtn = document.getElementById('back-to-login');
+        const connectScreenBtn = document.getElementById('connect-screen-btn');
+        const backToMainBtn = document.getElementById('back-to-main');
+        const searchBtn = document.getElementById('search-btn');
+        const showAllBtn = document.getElementById('show-all-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        const alertButton = document.getElementById('alert-button');
+        const messageButtons = document.querySelectorAll('.message-btn');
+        const connectionStatus = document.getElementById('connection-status');
+        const userInfo = document.getElementById('user-info');
+        const firebaseStatus = document.getElementById('firebase-status');
 
-                    <!-- Stock Alert -->
-                    <div class="stock-warning">
-                        <span class="warning-icon">⚠️</span>
-                        <span id="stockMessage">Últimas unidades! Não perca esta oportunidade!</span>
-                    </div>
+        // Variáveis globais
+        let currentUser = null;
+        let connectedUser = null;
 
-                    <!-- Model Selection -->
-                    <div class="selection-group">
-                        <h3>Escolha o Modelo:</h3>
-                        <div class="model-options">
-                            <button class="model-btn active" data-model="iphone15" data-stock="3">
-                                <span class="model-name">iPhone 15</span>
-                                <span class="model-price">R$ 119,99</span>
-                                <span class="stock-badge">3 disponíveis</span>
-                            </button>
-                            <button class="model-btn" data-model="iphone13" data-stock="4">
-                                <span class="model-name">iPhone 13</span>
-                                <span class="model-price">R$ 95,99</span>
-                                <span class="stock-badge">4 disponíveis</span>
-                            </button>
-                        </div>
-                    </div>
+        // ✅ TESTE DE CONEXÃO COM FIREBASE
+        function testarConexaoFirebase() {
+            console.log("🧪 Iniciando teste de conexão com Firebase...");
+            updateDebug('login', '🧪 Testando conexão Firebase...');
+            
+            if (!database) {
+                updateDebug('login', '❌ Database não inicializado');
+                return;
+            }
 
-                    <!-- Color Selection -->
-                    <div class="selection-group">
-                        <h3>Escolha a Cor:</h3>
-                        <div class="color-options" id="colorOptions">
-                            <!-- Colors will be populated by JS -->
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="action-buttons">
-                        <button class="btn btn-primary" id="buyBtn">
-                            🛒 Comprar Agora
-                        </button>
-                        <button class="btn btn-secondary" id="cartBtn">
-                            ➕ Adicionar ao Carrinho
-                        </button>
-                    </div>
+            const testRef = database.ref('teste_conexao');
+            const testData = {
+                mensagem: 'Teste de conexão BedConnect',
+                timestamp: new Date().toISOString(),
+                status: 'ativo'
+            };
+            
+            // Teste de escrita
+            testRef.set(testData)
+                .then(() => {
+                    console.log("✅ Dados escritos no Firebase com sucesso!");
+                    updateDebug('login', '✅ Dados escritos no Firebase');
+                    firebaseStatus.textContent = '✅ Conectado ao Firebase!';
+                    firebaseStatus.style.backgroundColor = 'rgba(76, 175, 80, 0.3)';
                     
-                    <!-- Delivery & Trust Info -->
-                    <div class="product-features">
-                        <div class="feature-item">
-                            <span class="feature-icon">🚚</span>
-                            <div class="feature-content">
-                                <strong>Entrega Rápida</strong>
-                                <p>Em até 24h em São Luís do Maranhão</p>
+                    // Teste de leitura
+                    return testRef.once('value');
+                })
+                .then(snapshot => {
+                    const dados = snapshot.val();
+                    console.log("✅ Dados lidos do Firebase:", dados);
+                    updateDebug('login', '✅ Dados lidos: ' + JSON.stringify(dados));
+                    
+                    // Limpar teste
+                    return testRef.remove();
+                })
+                .then(() => {
+                    console.log("🔥 Conexão com Firebase estabelecida com sucesso!");
+                    updateDebug('login', '🔥 Conexão estabelecida!');
+                })
+                .catch(error => {
+                    console.error("❌ Erro na conexão com Firebase:", error);
+                    updateDebug('login', '❌ Erro: ' + error.message);
+                    firebaseStatus.textContent = '❌ Erro na conexão com Firebase';
+                    firebaseStatus.style.backgroundColor = 'rgba(244, 67, 54, 0.3)';
+                });
+        }
+
+        // Executar teste após 1 segundo
+        setTimeout(testarConexaoFirebase, 1000);
+
+        // Função para atualizar debug
+        function updateDebug(screen, message) {
+            const debugElement = document.getElementById(`debug-${screen}`);
+            if (debugElement) {
+                const timestamp = new Date().toLocaleTimeString();
+                debugElement.innerHTML += `[${timestamp}] ${message}<br>`;
+                debugElement.scrollTop = debugElement.scrollHeight;
+            }
+            console.log(`[${screen}] ${message}`);
+        }
+
+        // Navegação entre telas
+        goToRegisterBtn.addEventListener('click', () => {
+            loginScreen.classList.remove('active');
+            registerScreen.classList.add('active');
+            updateDebug('register', 'Navegou para cadastro');
+        });
+        
+        backToLoginBtn.addEventListener('click', () => {
+            registerScreen.classList.remove('active');
+            loginScreen.classList.add('active');
+            updateDebug('login', 'Voltou para login');
+        });
+        
+        connectScreenBtn.addEventListener('click', () => {
+            mainScreen.classList.remove('active');
+            connectScreen.classList.add('active');
+            carregarTodosUsuarios();
+            updateDebug('connect', 'Navegou para conexões');
+        });
+        
+        backToMainBtn.addEventListener('click', () => {
+            connectScreen.classList.remove('active');
+            mainScreen.classList.add('active');
+            updateDebug('main', 'Voltou para tela principal');
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            connectedUser = null;
+            mainScreen.classList.remove('active');
+            loginScreen.classList.add('active');
+            updateDebug('login', 'Usuário fez logout');
+            alert('Você saiu do sistema.');
+        });
+
+        // Sistema de Login
+        loginBtn.addEventListener('click', () => {
+            const name = document.getElementById('login-name').value.trim();
+            const birthdate = document.getElementById('login-birthdate').value;
+            
+            if (!name || !birthdate) {
+                showStatus('login-status', 'Por favor, preencha todos os campos.', 'error');
+                updateDebug('login', '❌ Campos não preenchidos');
+                return;
+            }
+
+            updateDebug('login', `Tentando login: ${name}, ${birthdate}`);
+            showStatus('login-status', 'Conectando...', 'loading');
+            
+            // Buscar usuário no Firebase
+            database.ref('usuarios').once('value')
+                .then(snapshot => {
+                    updateDebug('login', '✅ Dados recebidos do Firebase');
+                    let userFound = null;
+                    
+                    if (snapshot.exists()) {
+                        const users = snapshot.val();
+                        updateDebug('login', `📊 ${Object.keys(users).length} usuários encontrados`);
+                        
+                        for (const userId in users) {
+                            const user = users[userId];
+                            if (user.nome === name && user.dataNascimento === birthdate) {
+                                userFound = {
+                                    id: userId,
+                                    ...user
+                                };
+                                updateDebug('login', `✅ Usuário encontrado: ${userId}`);
+                                break;
+                            }
+                        }
+                    } else {
+                        updateDebug('login', '📭 Nenhum usuário no banco');
+                    }
+                    
+                    if (userFound) {
+                        currentUser = userFound;
+                        showStatus('login-status', 'Login realizado com sucesso!', 'success');
+                        updateDebug('login', '🎉 Login bem-sucedido');
+                        setTimeout(() => {
+                            loginScreen.classList.remove('active');
+                            mainScreen.classList.add('active');
+                            updateUserInfo();
+                            checkConnections();
+                            updateDebug('main', `Usuário logado: ${currentUser.nome}`);
+                        }, 1000);
+                    } else {
+                        showStatus('login-status', 'Usuário não encontrado. Verifique os dados ou cadastre-se.', 'error');
+                        updateDebug('login', '❌ Usuário não encontrado');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao fazer login:', error);
+                    showStatus('login-status', 'Erro ao fazer login. Tente novamente.', 'error');
+                    updateDebug('login', '❌ Erro: ' + error.message);
+                });
+        });
+        
+        // Sistema de Cadastro
+        registerBtn.addEventListener('click', () => {
+            const name = document.getElementById('register-name').value.trim();
+            const birthdate = document.getElementById('register-birthdate').value;
+            
+            if (!name || !birthdate) {
+                showStatus('register-status', 'Por favor, preencha todos os campos.', 'error');
+                updateDebug('register', '❌ Campos não preenchidos');
+                return;
+            }
+
+            updateDebug('register', `Tentando cadastro: ${name}, ${birthdate}`);
+            showStatus('register-status', 'Cadastrando...', 'loading');
+            
+            // Verificar se usuário já existe
+            database.ref('usuarios').once('value')
+                .then(snapshot => {
+                    updateDebug('register', '✅ Dados recebidos do Firebase');
+                    let userExists = false;
+                    
+                    if (snapshot.exists()) {
+                        const users = snapshot.val();
+                        updateDebug('register', `📊 ${Object.keys(users).length} usuários no sistema`);
+                        
+                        for (const userId in users) {
+                            const user = users[userId];
+                            if (user.nome === name && user.dataNascimento === birthdate) {
+                                userExists = true;
+                                updateDebug('register', '❌ Usuário já existe');
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (userExists) {
+                        showStatus('register-status', 'Usuário já cadastrado. Faça login.', 'error');
+                    } else {
+                        // Criar novo usuário
+                        const newUserRef = database.ref('usuarios').push();
+                        const userData = {
+                            nome: name,
+                            dataNascimento: birthdate,
+                            dataCadastro: new Date().toISOString()
+                        };
+                        
+                        updateDebug('register', `📝 Criando usuário: ${JSON.stringify(userData)}`);
+                        
+                        newUserRef.set(userData)
+                        .then(() => {
+                            currentUser = {
+                                id: newUserRef.key,
+                                ...userData
+                            };
+                            showStatus('register-status', 'Cadastro realizado com sucesso!', 'success');
+                            updateDebug('register', `🎉 Usuário criado: ${newUserRef.key}`);
+                            setTimeout(() => {
+                                registerScreen.classList.remove('active');
+                                mainScreen.classList.add('active');
+                                updateUserInfo();
+                                checkConnections();
+                                updateDebug('main', `Novo usuário: ${currentUser.nome}`);
+                            }, 1000);
+                        })
+                        .catch(error => {
+                            console.error('Erro ao cadastrar:', error);
+                            showStatus('register-status', 'Erro ao cadastrar. Tente novamente.', 'error');
+                            updateDebug('register', '❌ Erro ao cadastrar: ' + error.message);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao verificar usuário:', error);
+                    showStatus('register-status', 'Erro ao verificar usuário. Tente novamente.', 'error');
+                    updateDebug('register', '❌ Erro na verificação: ' + error.message);
+                });
+        });
+
+        // Carregar todos os usuários (para conexão)
+        function carregarTodosUsuarios() {
+            const userResults = document.getElementById('user-results');
+            userResults.innerHTML = '<p>Carregando usuários...</p>';
+            updateDebug('connect', 'Carregando todos os usuários...');
+            
+            database.ref('usuarios').once('value')
+                .then(snapshot => {
+                    userResults.innerHTML = '';
+                    updateDebug('connect', '✅ Dados de usuários recebidos');
+                    
+                    if (!snapshot.exists()) {
+                        userResults.innerHTML = '<p>Nenhum usuário cadastrado no sistema.</p>';
+                        updateDebug('connect', '📭 Nenhum usuário no sistema');
+                        return;
+                    }
+                    
+                    const users = snapshot.val();
+                    let usersFound = false;
+                    updateDebug('connect', `📊 ${Object.keys(users).length} usuários encontrados`);
+                    
+                    for (const userId in users) {
+                        const user = users[userId];
+                        
+                        // Não mostrar o próprio usuário
+                        if (userId === currentUser.id) continue;
+                        
+                        usersFound = true;
+                        const userItem = document.createElement('div');
+                        userItem.className = 'user-item';
+                        
+                        // Verificar se já está conectado
+                        const isConnected = currentUser.conexoes && currentUser.conexoes[userId];
+                        
+                        userItem.innerHTML = `
+                            <div>
+                                <strong>${user.nome}</strong><br>
+                                <small>Nascimento: ${user.dataNascimento}</small>
+                                <small style="display: block; font-size: 0.8em;">ID: ${userId.substring(0, 8)}...</small>
                             </div>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🔒</span>
-                            <div class="feature-content">
-                                <strong>Compra Segura</strong>
-                                <p>Seus dados protegidos</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">↩️</span>
-                            <div class="feature-content">
-                                <strong>Garantia 7 dias</strong>
-                                <p>Troca ou devolução</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">💳</span>
-                            <div class="feature-content">
-                                <strong>Frete Grátis</strong>
-                                <p>Para toda São Luís</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                            <button class="connect-btn" data-userid="${userId}" ${isConnected ? 'disabled' : ''}>
+                                ${isConnected ? '✅ Conectado' : '🔗 Conectar'}
+                            </button>
+                        `;
+                        userResults.appendChild(userItem);
+                        
+                        if (!isConnected) {
+                            userItem.querySelector('.connect-btn').addEventListener('click', function() {
+                                connectToUser(userId, user.nome);
+                            });
+                        }
+                    }
+                    
+                    if (!usersFound) {
+                        userResults.innerHTML = '<p>Nenhum outro usuário encontrado.</p>';
+                        updateDebug('connect', '👥 Apenas o usuário atual no sistema');
+                    } else {
+                        updateDebug('connect', `👥 ${usersFound} outros usuários listados`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar usuários:', error);
+                    userResults.innerHTML = '<p>Erro ao carregar usuários.</p>';
+                    updateDebug('connect', '❌ Erro: ' + error.message);
+                });
+        }
+        
+        // Buscar usuários para conectar
+        searchBtn.addEventListener('click', () => {
+            const name = document.getElementById('search-name').value.trim();
+            const birthdate = document.getElementById('search-birthdate').value;
+            
+            if (!name && !birthdate) {
+                alert('Preencha pelo menos um campo para buscar.');
+                updateDebug('connect', '❌ Nenhum critério de busca');
+                return;
+            }
+            
+            updateDebug('connect', `🔍 Buscando: nome="${name}", data="${birthdate}"`);
+            const userResults = document.getElementById('user-results');
+            userResults.innerHTML = '<p>Buscando usuários...</p>';
+            
+            database.ref('usuarios').once('value')
+                .then(snapshot => {
+                    userResults.innerHTML = '';
+                    updateDebug('connect', '✅ Busca concluída');
+                    
+                    if (!snapshot.exists()) {
+                        userResults.innerHTML = '<p>Nenhum usuário cadastrado.</p>';
+                        return;
+                    }
+                    
+                    const users = snapshot.val();
+                    let usersFound = false;
+                    
+                    for (const userId in users) {
+                        const user = users[userId];
+                        
+                        // Não mostrar o próprio usuário
+                        if (userId === currentUser.id) continue;
+                        
+                        // Filtrar por nome e/ou data de nascimento
+                        const nameMatch = !name || user.nome.toLowerCase().includes(name.toLowerCase());
+                        const birthdateMatch = !birthdate || user.dataNascimento === birthdate;
+                        
+                        if (nameMatch && birthdateMatch) {
+                            usersFound = true;
+                            const userItem = document.createElement('div');
+                            userItem.className = 'user-item';
+                            
+                            // Verificar se já está conectado
+                            const isConnected = currentUser.conexoes && currentUser.conexoes[userId];
+                            
+                            userItem.innerHTML = `
+                                <div>
+                                    <strong>${user.nome}</strong><br>
+                                    <small>Nascimento: ${user.dataNascimento}</small>
+                                </div>
+                                <button class="connect-btn" data-userid="${userId}" ${isConnected ? 'disabled' : ''}>
+                                    ${isConnected ? '✅ Conectado' : '🔗 Conectar'}
+                                </button>
+                            `;
+                            userResults.appendChild(userItem);
+                            
+                            if (!isConnected) {
+                                userItem.querySelector('.connect-btn').addEventListener('click', function() {
+                                    connectToUser(userId, user.nome);
+                                });
+                            }
+                        }
+                    }
+                    
+                    if (!usersFound) {
+                        userResults.innerHTML = '<p>Nenhum usuário encontrado.</p>';
+                        updateDebug('connect', '🔍 Nenhum usuário encontrado na busca');
+                    } else {
+                        updateDebug('connect', `🔍 ${usersFound} usuários encontrados na busca`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar usuários:', error);
+                    userResults.innerHTML = '<p>Erro ao buscar usuários.</p>';
+                    updateDebug('connect', '❌ Erro na busca: ' + error.message);
+                });
+        });
 
-            <!-- Product Details -->
-            <section class="product-details">
-                <h2>Especificações Técnicas</h2>
-                <div class="specs-grid">
-                    <div class="spec-item">
-                        <strong>Tela:</strong> Super Retina XDR de 6.1 polegadas
-                    </div>
-                    <div class="spec-item">
-                        <strong>Câmera:</strong> Sistema de câmera dupla de 12MP
-                    </div>
-                    <div class="spec-item">
-                        <strong>Processador:</strong> Chip A16 Bionic / A15 Bionic
-                    </div>
-                    <div class="spec-item">
-                        <strong>Armazenamento:</strong> 128GB / 256GB
-                    </div>
-                    <div class="spec-item">
-                        <strong>Bateria:</strong> Até 20 horas de vídeo
-                    </div>
-                    <div class="spec-item">
-                        <strong>Resistência:</strong> IP68 (água e poeira)
-                    </div>
-                </div>
-            </section>
+        // Mostrar todos os usuários
+        showAllBtn.addEventListener('click', carregarTodosUsuarios);
+        
+        // Conectar com usuário
+        function connectToUser(userId, userName) {
+            updateDebug('connect', `🔗 Tentando conectar com: ${userName} (${userId})`);
+            
+            // Salvar conexão no usuário atual
+            database.ref(`usuarios/${currentUser.id}/conexoes/${userId}`).set(true)
+                .then(() => {
+                    updateDebug('connect', `✅ Conexão salva em ${currentUser.id}`);
+                    
+                    // Salvar conexão no outro usuário também (conexão bidirecional)
+                    return database.ref(`usuarios/${userId}/conexoes/${currentUser.id}`).set(true);
+                })
+                .then(() => {
+                    updateDebug('connect', `✅ Conexão bidirecional salva em ${userId}`);
+                    
+                    connectedUser = {
+                        id: userId,
+                        nome: userName
+                    };
+                    
+                    // Atualizar currentUser localmente
+                    if (!currentUser.conexoes) currentUser.conexoes = {};
+                    currentUser.conexoes[userId] = true;
+                    
+                    updateConnectionStatus();
+                    updateDebug('connect', `🎉 Conectado com ${userName}!`);
+                    alert(`✅ Conectado com ${userName}!`);
+                    
+                    // Atualizar lista de usuários
+                    carregarTodosUsuarios();
+                })
+                .catch(error => {
+                    console.error('Erro ao conectar:', error);
+                    updateDebug('connect', '❌ Erro na conexão: ' + error.message);
+                    alert('❌ Erro ao conectar. Tente novamente.');
+                });
+        }
+        
+        // Verificar conexões do usuário
+        function checkConnections() {
+            if (!currentUser) return;
+            
+            updateDebug('main', '🔍 Verificando conexões...');
+            
+            database.ref(`usuarios/${currentUser.id}/conexoes`).once('value')
+                .then(snapshot => {
+                    if (snapshot.exists()) {
+                        const connections = snapshot.val();
+                        updateDebug('main', `📞 ${Object.keys(connections).length} conexões encontradas`);
+                        
+                        // Pegar a primeira conexão
+                        const connectedUserId = Object.keys(connections)[0];
+                        
+                        // Buscar dados do usuário conectado
+                        return database.ref(`usuarios/${connectedUserId}`).once('value');
+                    } else {
+                        updateDebug('main', '📞 Nenhuma conexão encontrada');
+                        connectedUser = null;
+                        updateConnectionStatus();
+                    }
+                })
+                .then(userSnapshot => {
+                    if (userSnapshot && userSnapshot.exists()) {
+                        const userData = userSnapshot.val();
+                        connectedUser = {
+                            id: userSnapshot.key,
+                            nome: userData.nome
+                        };
+                        updateDebug('main', `✅ Conectado com: ${connectedUser.nome}`);
+                        updateConnectionStatus();
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao verificar conexões:', error);
+                    updateDebug('main', '❌ Erro nas conexões: ' + error.message);
+                });
+        }
+        
+        // Atualizar informações do usuário
+        function updateUserInfo() {
+            if (currentUser) {
+                userInfo.textContent = `👤 Usuário: ${currentUser.nome} | ID: ${currentUser.id.substring(0, 8)}...`;
+            }
+        }
+        
+        // Atualizar status de conexão
+        function updateConnectionStatus() {
+            if (connectedUser) {
+                connectionStatus.textContent = `✅ Conectado com: ${connectedUser.nome}`;
+                connectionStatus.className = 'status connected';
+                updateDebug('main', `🔗 Status: Conectado com ${connectedUser.nome}`);
+            } else {
+                connectionStatus.textContent = '❌ Desconectado - Conecte-se com alguém';
+                connectionStatus.className = 'status disconnected';
+                updateDebug('main', '🔗 Status: Desconectado');
+            }
+        }
+        
+        // Enviar alerta
+        alertButton.addEventListener('click', () => {
+            if (!connectedUser) {
+                alert('Você precisa estar conectado com alguém para enviar alertas.');
+                updateDebug('main', '❌ Tentativa de alerta sem conexão');
+                return;
+            }
+            
+            updateDebug('main', '🚨 Enviando alerta de emergência');
+            sendAlert('emergencia', '🚨 ALERTA DE EMERGÊNCIA!');
+        });
+        
+        // Enviar mensagens predefinidas
+        messageButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (!connectedUser) {
+                    alert('Você precisa estar conectado com alguém para enviar mensagens.');
+                    return;
+                }
+                
+                const message = this.getAttribute('data-message');
+                let tipo = 'mensagem';
+                
+                if (message === 'Quero água') tipo = 'agua';
+                else if (message === 'Preciso de ajuda') tipo = 'ajuda';
+                else if (message === 'Quero ir ao banheiro') tipo = 'banheiro';
+                
+                updateDebug('main', `📤 Enviando mensagem: ${message} (${tipo})`);
+                sendAlert(tipo, message);
+            });
+        });
+        
+        // Função para enviar alerta/mensagem
+        function sendAlert(tipo, mensagem) {
+            const alertaRef = database.ref('alertas').push();
+            const timestamp = new Date().toISOString();
+            const alertaData = {
+                remetente: currentUser.id,
+                remetenteNome: currentUser.nome,
+                destinatario: connectedUser.id,
+                destinatarioNome: connectedUser.nome,
+                mensagem: mensagem,
+                tipo: tipo,
+                timestamp: timestamp,
+                lido: false
+            };
+            
+            updateDebug('main', `📝 Enviando alerta: ${JSON.stringify(alertaData)}`);
+            
+            alertaRef.set(alertaData)
+            .then(() => {
+                alert('✅ Mensagem enviada com sucesso!');
+                updateDebug('main', '✅ Alerta enviado com sucesso');
+                console.log('📤 Alerta enviado:', alertaData);
+            })
+            .catch(error => {
+                console.error('Erro ao enviar alerta:', error);
+                alert('❌ Erro ao enviar mensagem. Tente novamente.');
+                updateDebug('main', '❌ Erro no alerta: ' + error.message);
+            });
+        }
+        
+        // Verificar alertas recebidos (para a pessoa que está cuidando)
+        function checkForAlerts() {
+            if (!currentUser) return;
+            
+            updateDebug('main', '👂 Ouvindo alertas...');
+            
+            database.ref('alertas').orderByChild('timestamp').on('child_added', (snapshot) => {
+                const alerta = snapshot.val();
+                updateDebug('main', `📨 Alerta recebido: ${JSON.stringify(alerta)}`);
+                
+                // Verificar se o alerta é para o usuário atual
+                if (alerta.destinatario === currentUser.id) {
+                    updateDebug('main', `🎯 Alerta destinado a este usuário: ${alerta.mensagem}`);
+                    
+                    // Mostrar notificação
+                    showNotification(alerta.mensagem, alerta.remetenteNome);
+                    
+                    // Tocar som de alerta
+                    playAlertSound();
+                    
+                    // Mostrar alerta na tela
+                    if (alerta.tipo === 'emergencia') {
+                        alert(`🚨 ALERTA DE EMERGÊNCIA!\nDe: ${alerta.remetenteNome}\nMensagem: ${alerta.mensagem}`);
+                    } else {
+                        alert(`📩 Nova Mensagem!\nDe: ${alerta.remetenteNome}\nMensagem: ${alerta.mensagem}`);
+                    }
+                    
+                    // Marcar como lido e remover após alguns segundos
+                    setTimeout(() => {
+                        snapshot.ref.remove();
+                        updateDebug('main', '🗑️ Alerta removido');
+                    }, 5000);
+                }
+            });
+        }
+        
+        // Mostrar notificação
+        function showNotification(mensagem, remetente) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('BedConnect - Alerta', {
+                    body: `De: ${remetente}\n${mensagem}`,
+                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🔔</text></svg>',
+                    requireInteraction: true
+                });
+                updateDebug('main', '🔔 Notificação exibida');
+            } else if ('Notification' in window && Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        new Notification('BedConnect - Alerta', {
+                            body: `De: ${remetente}\n${mensagem}`,
+                            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🔔</text></svg>'
+                        });
+                        updateDebug('main', '🔔 Notificação exibida após permissão');
+                    }
+                });
+            }
+        }
+        
+        // Tocar som de alerta
+        function playAlertSound() {
+            try {
+                // Criar um contexto de áudio
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 800;
+                gainNode.gain.value = 0.3;
+                
+                oscillator.start();
+                setTimeout(() => {
+                    oscillator.stop();
+                }, 1000);
+                updateDebug('main', '🔊 Som de alerta tocado');
+            } catch (error) {
+                console.log('🔇 Não foi possível tocar o som de alerta');
+                updateDebug('main', '🔇 Erro no som de alerta');
+            }
+        }
+        
+        // Função para mostrar status
+        function showStatus(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            
+            if (type === 'success') {
+                element.style.backgroundColor = 'rgba(76, 175, 80, 0.3)';
+            } else if (type === 'error') {
+                element.style.backgroundColor = 'rgba(244, 67, 54, 0.3)';
+            } else if (type === 'loading') {
+                element.style.backgroundColor = 'rgba(255, 193, 7, 0.3)';
+            }
+            
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 3000);
+        }
 
-            <!-- Reviews Section -->
-            <section class="reviews-section">
-                <h2>O que nossos clientes dizem</h2>
-                <div class="reviews-grid">
-                    <div class="review-card">
-                        <div class="review-header">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="Cliente 1" class="review-avatar">
-                            <div class="review-info">
-                                <h4>Maria Silva</h4>
-                                <div class="stars">★★★★★</div>
-                            </div>
-                        </div>
-                        <p class="review-text">"Produto chegou rápido e em perfeito estado! Super recomendo, melhor compra que fiz!"</p>
-                        <div class="review-images">
-                            <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=200&h=200&fit=crop" alt="Review 1">
-                            <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop" alt="Review 2">
-                        </div>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-header">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="Cliente 2" class="review-avatar">
-                            <div class="review-info">
-                                <h4>João Santos</h4>
-                                <div class="stars">★★★★★</div>
-                            </div>
-                        </div>
-                        <p class="review-text">"Atendimento excelente e produto original! Valeu muito a pena, aproveitem enquanto tem estoque!"</p>
-                        <div class="review-images">
-                            <img src="https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=200&h=200&fit=crop" alt="Review 3">
-                            <img src="https://images.unsplash.com/photo-1573141597928-403fcee0e056?w=200&h=200&fit=crop" alt="Review 4">
-                        </div>
-                    </div>
-                </div>
-            </section>
+        // Inicializar verificação de alertas
+        checkForAlerts();
 
-            <!-- Contact Section -->
-            <section class="contact-section">
-                <h2>Informações de Contato</h2>
-                <div class="contact-grid">
-                    <div class="contact-item">
-                        <span class="contact-icon">📞</span>
-                        <div>
-                            <strong>WhatsApp:</strong>
-                            <p>(98) 98470-8467</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <span class="contact-icon">📧</span>
-                        <div>
-                            <strong>E-mail:</strong>
-                            <p>contato@iphonestorema.com.br</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <span class="contact-icon">📍</span>
-                        <div>
-                            <strong>Atendimento:</strong>
-                            <p>São Luís do Maranhão - MA</p>
-                            <p class="delivery-note">Entregas rápidas em toda a região metropolitana</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <span class="contact-icon">🕒</span>
-                        <div>
-                            <strong>Horário:</strong>
-                            <p>Segunda a Sexta: 9h às 18h</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
+        // Solicitar permissão para notificações
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 iPhone Store MA - São Luís do Maranhão. Todos os direitos reservados.</p>
-        </div>
-    </footer>
-
-    <!-- WhatsApp Floating Button -->
-    <a href="https://wa.me/5598984708467?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20as%20ofertas%20de%20iPhone.%20Pode%20me%20ajudar%3F" class="whatsapp-float" id="whatsappFloat" target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="whatsapp-icon">
-        <span class="whatsapp-tooltip">Fale conosco no WhatsApp</span>
-    </a>
-
-    <!-- Modal de Confirmação do Produto -->
-    <div id="productModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" id="closeProductModal">&times;</span>
-            <h2>Confirmar Compra</h2>
-            <div class="modal-product-info">
-                <div class="modal-product-item">
-                    <strong>Produto:</strong>
-                    <span id="modalProductName">-</span>
-                </div>
-                <div class="modal-product-item">
-                    <strong>Cor:</strong>
-                    <span id="modalProductColor">-</span>
-                </div>
-                <div class="modal-product-item">
-                    <strong>Valor:</strong>
-                    <span id="modalProductPrice" class="modal-price">R$ 100,00</span>
-                </div>
-            </div>
-            <button class="btn btn-primary" id="finalizeBtn">Finalizar Compra</button>
-        </div>
-    </div>
-
-    <!-- Modal de Formulário de Checkout -->
-    <div id="checkoutModal" class="modal">
-        <div class="modal-content modal-large">
-            <span class="modal-close" id="closeCheckoutModal">&times;</span>
-            <h2>Finalizar Pedido</h2>
-            <form id="checkoutForm">
-                <div class="form-group">
-                    <label for="fullName">Nome Completo *</label>
-                    <input type="text" id="fullName" name="fullName" required placeholder="Digite seu nome completo">
-                </div>
-                
-                <div class="form-group">
-                    <label for="cep">CEP *</label>
-                    <input type="text" id="cep" name="cep" required placeholder="00000-000" maxlength="9">
-                    <small class="form-help">Digite o CEP para preenchimento automático</small>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="street">Rua *</label>
-                        <input type="text" id="street" name="street" required placeholder="Nome da rua" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="houseNumber">Número da Casa *</label>
-                        <input type="text" id="houseNumber" name="houseNumber" required placeholder="123">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="neighborhood">Bairro *</label>
-                        <input type="text" id="neighborhood" name="neighborhood" required placeholder="Bairro" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="city">Cidade *</label>
-                        <input type="text" id="city" name="city" required placeholder="Cidade" readonly>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="state">Estado *</label>
-                    <input type="text" id="state" name="state" required placeholder="Estado" readonly>
-                </div>
-                
-                <div class="free-shipping-badge">
-                    <span class="shipping-icon">🚚</span>
-                    <div>
-                        <strong>Frete Grátis!</strong>
-                        <p>Entregamos em toda São Luís do Maranhão sem custo adicional</p>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">E-mail *</label>
-                    <input type="email" id="email" name="email" required placeholder="seu@email.com">
-                </div>
-                
-                <div class="form-group">
-                    <label for="whatsapp">WhatsApp *</label>
-                    <input type="tel" id="whatsapp" name="whatsapp" required placeholder="(98) 99999-9999" maxlength="15">
-                </div>
-                
-                <div class="form-summary">
-                    <div class="summary-item">
-                        <span>Produto:</span>
-                        <span id="summaryProduct">-</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>Cor:</span>
-                        <span id="summaryColor">-</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>Frete:</span>
-                        <span style="color: #4CAF50; font-weight: 700;">Grátis</span>
-                    </div>
-                    <div class="summary-item summary-total">
-                        <span>Total:</span>
-                        <span id="summaryTotal">R$ 100,00</span>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" id="submitOrderBtn">
-                    <span id="submitBtnText">Enviar Pedido</span>
-                    <span id="submitBtnLoader" class="loader" style="display: none;"></span>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+        console.log("🚀 BedConnect completamente inicializado!");
+        console.log("📊 Conectado ao Firebase:", firebaseConfig.databaseURL);
+        updateDebug('login', '🚀 Sistema pronto para uso!');
+    </script>
 </body>
 </html>
-
